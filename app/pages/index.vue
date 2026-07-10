@@ -41,11 +41,11 @@ useSchemaOrg([defineOrganization({ name: modules.value.school.fullName }), defin
           </div>
         </div>
 
-        <div class="hero-visual relative mx-auto w-full max-w-[520px] lg:mx-0">
-          <div class="relative aspect-[.94] overflow-hidden rounded-[2.5rem] border-[10px] border-white bg-slate-100 shadow-[0_35px_80px_rgba(18,58,99,.18)]">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.35),transparent_35%)]" />
-            <NuxtImg :src="page.hero.image" :alt="page.hero.imageAlt" width="512" height="512" loading="eager" fetchpriority="high" class="absolute inset-0 h-full w-full object-contain p-14 pb-28 sm:p-20 sm:pb-32" />
-            <div class="absolute bottom-6 left-6 right-6 rounded-2xl bg-white/95 p-4 backdrop-blur">
+        <div class="hero-visual relative mx-auto w-full max-w-[560px] lg:mx-0">
+          <div class="relative aspect-[16/11] overflow-hidden rounded-[2.5rem] border-[10px] border-white bg-slate-100 shadow-[0_35px_80px_rgba(18,58,99,.18)]">
+            <NuxtImg :src="page.hero.image" :alt="page.hero.imageAlt" width="896" height="616" loading="eager" fetchpriority="high" class="absolute inset-0 size-full object-cover transition-transform duration-700 hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-school-navy/60 via-transparent to-white/10" />
+            <div class="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/40 bg-white/90 p-4 shadow-xl backdrop-blur">
               <p class="font-hand text-2xl font-bold text-school-action">{{ page.hero.cardTitle }}</p>
               <p class="mt-1 text-xs leading-5 text-slate-600">{{ page.hero.cardDescription }}</p>
             </div>
@@ -60,8 +60,9 @@ useSchemaOrg([defineOrganization({ name: modules.value.school.fullName }), defin
       <div class="container-school grid items-center gap-10 lg:grid-cols-[.78fr_1.22fr] lg:gap-16">
         <div v-reveal class="relative mx-auto w-full max-w-sm">
           <div class="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-school-sky to-blue-100 shadow-[0_24px_60px_rgba(18,58,99,.14)]">
-            <NuxtImg :src="page.welcome.image" :alt="page.welcome.imageAlt" width="512" height="512" loading="lazy" class="absolute inset-0 h-full w-full object-contain p-10 pb-28" />
-            <div class="absolute inset-x-4 bottom-4 rounded-2xl bg-white/95 p-4 text-center shadow-lg backdrop-blur">
+            <NuxtImg :src="page.welcome.image" :alt="page.welcome.imageAlt" width="512" height="640" loading="lazy" class="absolute inset-0 size-full object-cover transition-transform duration-700 hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-school-navy/65 via-transparent to-transparent" />
+            <div class="absolute inset-x-4 bottom-4 rounded-2xl border border-white/30 bg-white/95 p-4 text-center shadow-lg backdrop-blur">
               <b class="block text-school-navy">{{ page.welcome.headmasterName }}</b>
               <span class="mt-1 block text-xs font-semibold uppercase tracking-wider text-school-action">{{ page.welcome.headmasterRole }}</span>
             </div>
