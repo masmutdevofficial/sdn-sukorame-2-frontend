@@ -9,7 +9,7 @@ export const useAdminAccount = () => {
     try { account.value = { ...structuredClone(fallback), ...(JSON.parse(localStorage.getItem(ADMIN_ACCOUNT_KEY) || 'null') || {}) } } catch { account.value = structuredClone(fallback) }
   })
   const saveAccount = (next: AdminAccount) => {
-    account.value = structuredClone(next)
+    account.value = { ...next }
     if (import.meta.client) localStorage.setItem(ADMIN_ACCOUNT_KEY, JSON.stringify(account.value))
   }
   return { account, saveAccount }
