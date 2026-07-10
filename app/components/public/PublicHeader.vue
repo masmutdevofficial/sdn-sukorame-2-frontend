@@ -3,8 +3,10 @@ const open = ref(false)
 const route = useRoute()
 const schoolModules = useSchoolModules()
 await schoolModules.ready
+const webSettings = useWebSettings('public')
+await webSettings.ready
 const school = computed(() => schoolModules.modules.value.school)
-const logo = 'https://cdn.sdnsukorame2kotakediri.sch.id/logo.png'
+const logo = computed(() => webSettings.settings.value.logo || 'https://cdn.sdnsukorame2kotakediri.sch.id/logo.png')
 const nav = [
   { label: 'Beranda', to: '/', icon: 'mdi:home-outline' },
   { label: 'Profil', to: '/profil', icon: 'mdi:school-outline' },

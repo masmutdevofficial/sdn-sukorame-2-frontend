@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   runtimeConfig: { public: { siteUrl } },
-  app: { head: { htmlAttrs: { lang: 'id' }, titleTemplate: '%s | SDN Sukorame 2', link: [{ rel: 'icon', href: 'https://cdn.sdnsukorame2kotakediri.sch.id/favicon.ico' }] } },
+  app: { head: { htmlAttrs: { lang: 'id' } } },
   site: { url: siteUrl, name: 'SD Negeri Sukorame 2 Kota Kediri' },
   robots: { disallow: ['/admin'] },
   sitemap: { exclude: ['/admin/**'] },

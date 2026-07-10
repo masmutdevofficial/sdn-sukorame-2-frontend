@@ -16,6 +16,7 @@ const menus = [
   { label: 'Galeri', to: '/admin/galeri', icon: 'mdi:image-multiple-outline' },
   { label: 'Kontak', to: '/admin/kontak', icon: 'mdi:map-marker-outline' },
   { label: 'PPDB', to: '/admin/ppdb', icon: 'mdi:account-school-outline' },
+  { label: 'Settings Web', to: '/admin/settings-web', icon: 'mdi:web-sync' },
 ]
 
 const isActive = (to: string) => to === '/admin' ? route.path === to : route.path.startsWith(to)
@@ -45,7 +46,7 @@ const requestLogout = async () => {
         </nav>
         <p class="mt-7 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-blue-300">Akses cepat</p>
         <nav class="mt-3 grid gap-1.5">
-          <NuxtLink to="/admin/settings" class="nav-item" :class="{ active: isActive('/admin/settings') }"><Icon name="mdi:cog-outline" size="20" />Pengaturan</NuxtLink>
+          <NuxtLink to="/admin/settings" class="nav-item" :class="{ active: isActive('/admin/settings') }"><Icon name="mdi:cog-outline" size="20" />Pengaturan Akun</NuxtLink>
           <NuxtLink to="/" target="_blank" class="nav-item"><Icon name="mdi:web" size="20" />Lihat Website<Icon name="mdi:open-in-new" class="ml-auto opacity-50" size="14" /></NuxtLink>
         </nav>
       </div>
@@ -56,7 +57,7 @@ const requestLogout = async () => {
 
     <Teleport to="body">
       <Transition name="backdrop"><button v-if="sidebarOpen" class="fixed inset-0 z-[80] bg-slate-950/45 backdrop-blur-sm md:hidden" aria-label="Tutup menu" @click="sidebarOpen = false" /></Transition>
-      <Transition name="drawer"><aside v-if="sidebarOpen" class="admin-sidebar fixed inset-y-0 left-0 z-[90] flex w-[min(86vw,20rem)] flex-col text-white md:hidden"><div class="flex h-20 items-center justify-between border-b border-white/10 px-5"><div class="flex items-center gap-3"><span class="grid size-11 place-items-center overflow-hidden rounded-xl bg-white p-1"><img src="https://cdn.sdnsukorame2kotakediri.sch.id/logo.png" alt="Logo SDN Sukorame 2" class="size-full object-contain" /></span><div><b>Admin SAKTI</b><p class="text-[11px] text-blue-200">SDN Sukorame 2</p></div></div><button class="grid size-9 place-items-center rounded-xl hover:bg-white/10" aria-label="Tutup menu" @click="sidebarOpen = false"><Icon name="mdi:close" size="24" /></button></div><nav class="grid gap-1.5 overflow-y-auto p-4"><NuxtLink v-for="menu in menus" :key="menu.to" :to="menu.to" class="nav-item" :class="{ active: isActive(menu.to) }"><Icon :name="menu.icon" size="20" />{{ menu.label }}</NuxtLink><div class="my-2 border-t border-white/10" /><NuxtLink to="/admin/settings" class="nav-item"><Icon name="mdi:cog-outline" size="20" />Pengaturan</NuxtLink><NuxtLink to="/" target="_blank" class="nav-item"><Icon name="mdi:web" size="20" />Lihat Website</NuxtLink></nav></aside></Transition>
+      <Transition name="drawer"><aside v-if="sidebarOpen" class="admin-sidebar fixed inset-y-0 left-0 z-[90] flex w-[min(86vw,20rem)] flex-col text-white md:hidden"><div class="flex h-20 items-center justify-between border-b border-white/10 px-5"><div class="flex items-center gap-3"><span class="grid size-11 place-items-center overflow-hidden rounded-xl bg-white p-1"><img src="https://cdn.sdnsukorame2kotakediri.sch.id/logo.png" alt="Logo SDN Sukorame 2" class="size-full object-contain" /></span><div><b>Admin SAKTI</b><p class="text-[11px] text-blue-200">SDN Sukorame 2</p></div></div><button class="grid size-9 place-items-center rounded-xl hover:bg-white/10" aria-label="Tutup menu" @click="sidebarOpen = false"><Icon name="mdi:close" size="24" /></button></div><nav class="grid gap-1.5 overflow-y-auto p-4"><NuxtLink v-for="menu in menus" :key="menu.to" :to="menu.to" class="nav-item" :class="{ active: isActive(menu.to) }"><Icon :name="menu.icon" size="20" />{{ menu.label }}</NuxtLink><div class="my-2 border-t border-white/10" /><NuxtLink to="/admin/settings" class="nav-item"><Icon name="mdi:cog-outline" size="20" />Pengaturan Akun</NuxtLink><NuxtLink to="/" target="_blank" class="nav-item"><Icon name="mdi:web" size="20" />Lihat Website</NuxtLink></nav></aside></Transition>
     </Teleport>
 
     <div class="md:pl-[17.5rem]">
