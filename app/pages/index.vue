@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { defaultHomePageContent } from '~/data/dummy/home-page'
-import { programs as defaultPrograms, school } from '~/data/dummy/content'
-import { contentRepository } from '~/repositories/dummy/content.repository'
-import { homePageRepository } from '~/repositories/dummy/home-page.repository'
+import { contentRepository } from '~/repositories/http/content.repository'
+import { homePageRepository } from '~/repositories/http/home-page.repository'
+import { DEFAULT_IMAGE_URL } from '~/repositories/http/api'
 
-const { data: page } = await useAsyncData('home-page', () => homePageRepository.get('beranda'), { default: () => structuredClone(defaultHomePageContent) })
-const { data: programs } = await useAsyncData('home-programs', async () => (await contentRepository.list({ category: 'Program Sekolah', status: 'published', perPage: 100 })).items, { default: () => defaultPrograms })
-const { modules } = await useSchoolModules()
-const news = computed(() => modules.value.informationItems.filter(item => item.status === 'published').sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(item => ({ ...item, category: modules.value.informationCategories.find(category => category.id === item.categoryId)?.name || 'Informasi', image: item.images[0] || '/images/no-image.png', excerpt: item.description, slug: item.id })))
+const { data: pageData } = await useAsyncData('home-page', () => homePageRepository.get('beranda'))
+const page = computed(() => pageData.value!)
+const { data: programs } = await useAsyncData('home-programs', async () => (await contentRepository.list({ module: 'program', status: 'published', perPage: 100 })).items, { default: () => [] })
+const schoolModules = useSchoolModules()
+await schoolModules.ready
+const { modules } = schoolModules
+const news = computed(() => modules.value.informationItems.filter(item => item.status === 'published').sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(item => ({ ...item, category: modules.value.informationCategories.find(category => category.id === item.categoryId)?.name || 'Informasi', image: item.images[0] || DEFAULT_IMAGE_URL, excerpt: item.description, slug: item.slug || item.id })))
 
 useSchoolSeo(() => page.value.seo.title, () => page.value.seo.description)
-useSchemaOrg([defineOrganization({ name: school.fullName }), defineWebSite({ name: school.fullName })])
+useSchemaOrg([defineOrganization({ name: modules.value.school.fullName }), defineWebSite({ name: modules.value.school.fullName })])
 
 </script>
 
@@ -96,7 +98,7 @@ useSchemaOrg([defineOrganization({ name: school.fullName }), defineWebSite({ nam
         <div class="reveal"><p class="font-hand text-3xl font-bold text-school-action">{{ page.programs.eyebrow }}</p><h2 class="font-display mt-2 text-4xl leading-tight text-school-navy sm:text-5xl">{{ page.programs.title }}</h2><p class="mt-5 leading-7 text-muted">{{ page.programs.description }}</p><NuxtLink :to="page.programs.action.url" class="mt-7 inline-flex items-center gap-2 font-bold text-school-action">{{ page.programs.action.label }} <Icon name="mdi:arrow-right" /></NuxtLink></div>
         <div class="grid gap-4 sm:grid-cols-2">
           <article v-for="(program,index) in programs.slice(0,page.programs.itemLimit)" :key="program.id" class="interactive-card reveal card p-6" :class="index===1||index===2?'sm:translate-y-6':''">
-            <span class="icon-bubble grid size-12 place-items-center rounded-2xl bg-school-sky text-school-action"><Icon :name="program.icon!" size="27" /></span><h3 class="mt-5 text-lg font-bold text-school-navy">{{program.title}}</h3><p class="mt-2 text-sm leading-6 text-muted">{{program.excerpt}}</p>
+            <span class="icon-bubble grid size-12 place-items-center rounded-2xl bg-school-sky text-school-action"><Icon :name="program.icon || 'mdi:school-outline'" size="27" /></span><h3 class="mt-5 text-lg font-bold text-school-navy">{{program.title}}</h3><p class="mt-2 text-sm leading-6 text-muted">{{program.excerpt}}</p>
           </article>
         </div>
       </div>
@@ -106,7 +108,7 @@ useSchemaOrg([defineOrganization({ name: school.fullName }), defineWebSite({ nam
       <div class="reveal flex flex-wrap items-end justify-between gap-5"><div><p class="font-hand text-3xl font-bold text-school-action">{{ page.news.eyebrow }}</p><h2 class="font-display mt-1 text-4xl text-school-navy sm:text-5xl">{{ page.news.title }}</h2></div><NuxtLink :to="page.news.action.url" class="btn btn-secondary">{{ page.news.action.label }} <Icon name="mdi:arrow-right" /></NuxtLink></div>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         <article v-for="(item,index) in news.slice(0,page.news.itemLimit)" :key="item.id" class="interactive-card reveal card group overflow-hidden" :style="`animation-range:entry ${index*3}% cover ${25+index*3}%`">
-          <div class="relative h-52 overflow-hidden bg-slate-100"><NuxtImg :src="item.image || '/images/no-image.png'" :alt="`Gambar ${item.title} belum tersedia`" width="512" height="512" loading="lazy" class="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-105" /><span class="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-bold text-school-navy shadow-sm">{{item.category}}</span></div>
+          <div class="relative h-52 overflow-hidden bg-slate-100"><NuxtImg :src="item.image || DEFAULT_IMAGE_URL" :alt="`Gambar ${item.title} belum tersedia`" width="512" height="512" loading="lazy" class="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-105" /><span class="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-bold text-school-navy shadow-sm">{{item.category}}</span></div>
           <div class="p-6"><p class="text-xs font-semibold text-muted">{{new Date(item.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}}</p><h3 class="mt-3 text-lg font-bold leading-7 text-school-navy">{{item.title}}</h3><p class="mt-3 line-clamp-2 text-sm leading-6 text-muted">{{item.excerpt}}</p><NuxtLink to="/informasi/berita" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-school-action">Baca berita <Icon name="mdi:arrow-right" /></NuxtLink></div>
         </article>
       </div>

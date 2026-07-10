@@ -17,7 +17,7 @@ const submit = async () => {
 <template>
   <main class="grid min-h-screen place-items-center bg-school-sky p-4">
     <form class="card w-full max-w-md p-8" @submit.prevent="submit">
-      <div class="mx-auto grid size-20 place-items-center overflow-hidden rounded-2xl border border-line bg-white p-1.5 shadow-lg shadow-school-navy/10"><img src="/logo.png" alt="Logo SDN Sukorame 2" class="size-full object-contain" /></div>
+      <div class="mx-auto grid size-20 place-items-center overflow-hidden rounded-2xl border border-line bg-white p-1.5 shadow-lg shadow-school-navy/10"><img src="https://cdn.sdnsukorame2kotakediri.sch.id/logo.png" alt="Logo SDN Sukorame 2" class="size-full object-contain" /></div>
       <h1 class="mt-5 text-center text-2xl font-bold text-school-navy">Admin Sekolah</h1>
       <p class="mt-2 text-center text-sm text-muted">Masuk menggunakan akun administrator.</p>
       <label class="mt-6 block text-sm font-semibold" for="email">Email</label>

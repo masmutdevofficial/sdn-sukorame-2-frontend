@@ -1,1 +1,1 @@
-export default defineNuxtRouteMiddleware(()=>{if(import.meta.client&&sessionStorage.getItem('sdn-demo-auth')!=='1')return navigateTo('/admin/login')})
+export default defineNuxtRouteMiddleware(()=>{if(import.meta.client&&sessionStorage.getItem('sdn-admin-session')!=='1')return navigateTo('/admin/login')})

@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { defaultHomePageContent } from '~/data/dummy/home-page'
-import { homePageRepository } from '~/repositories/dummy/home-page.repository'
+import { homePageRepository } from '~/repositories/http/home-page.repository'
 import type { HomePageContent } from '~/types/page-content'
 
 definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 useSeoMeta({ title: 'Edit Halaman Beranda', robots: 'noindex, nofollow' })
 
-const form = ref<HomePageContent>(structuredClone(defaultHomePageContent))
+const form = ref<HomePageContent>(null as unknown as HomePageContent)
 const loading = ref(true)
 const saving = ref(false)
 const notice = ref('')
 const toast = useToast()
-const { confirm } = useAdminConfirm()
 
 onMounted(async () => {
-  form.value = await homePageRepository.get('beranda')
-  loading.value = false
+  try { form.value = await homePageRepository.get('beranda') }
+  catch (error) { toast.error(error instanceof Error ? error.message : 'Beranda gagal dimuat.', 'Server error') }
+  finally { loading.value = false }
 })
 
 const save = async () => {
@@ -30,13 +29,6 @@ const save = async () => {
   } finally { saving.value = false }
 }
 
-const reset = async () => {
-  if (!await confirm({ title: 'Reset Beranda?', message: 'Seluruh perubahan beranda akan dikembalikan ke data awal.', confirmLabel: 'Ya, reset' })) return
-  form.value = await homePageRepository.reset('beranda')
-  notice.value = 'Halaman beranda dikembalikan ke data awal.'
-  toast.info(notice.value)
-}
-
 </script>
 
 <template>
@@ -46,7 +38,7 @@ const reset = async () => {
       <NuxtLink to="/" target="_blank" class="btn btn-secondary"><Icon name="mdi:open-in-new" /> Pratinjau</NuxtLink>
     </div>
     <p v-if="notice" role="status" class="mt-5 rounded-xl bg-green-100 p-3 text-green-900">{{ notice }}</p>
-    <div v-if="loading" class="card mt-6 p-10 text-center"><Icon name="mdi:loading" class="animate-spin" /> Memuat editor...</div>
+    <div v-if="loading || !form" class="card mt-6 p-10 text-center"><Icon name="mdi:loading" class="animate-spin" /> Memuat editor...</div>
 
     <form v-else class="mt-6 grid gap-6" @submit.prevent="save">
       <section class="card p-6"><h2 class="section-title">SEO</h2><div class="form-grid"><label class="admin-field">Judul halaman<input v-model="form.seo.title" required></label><label class="admin-field">Deskripsi meta<textarea v-model="form.seo.description" required rows="3" /></label></div></section>
@@ -82,7 +74,7 @@ const reset = async () => {
 
       <section class="card p-6"><h2 class="section-title">Call to Action</h2><div class="form-grid"><label class="admin-field md:col-span-2">Label bagian<input v-model="form.callToAction.eyebrow" required></label><label class="admin-field md:col-span-2">Judul<textarea v-model="form.callToAction.title" required rows="2" /></label><label class="admin-field md:col-span-2">Deskripsi<textarea v-model="form.callToAction.description" required rows="3" /></label><label class="admin-field">Tombol utama<input v-model="form.callToAction.primaryAction.label" required></label><label class="admin-field">URL tombol utama<input v-model="form.callToAction.primaryAction.url" required></label><label class="admin-field">Tombol kedua<input v-model="form.callToAction.secondaryAction.label" required></label><label class="admin-field">URL tombol kedua<input v-model="form.callToAction.secondaryAction.url" required></label></div></section>
 
-      <div class="sticky bottom-4 flex flex-wrap justify-end gap-3 rounded-2xl border border-line bg-white/95 p-4 shadow-xl backdrop-blur"><button type="button" class="btn btn-secondary" @click="reset"><Icon name="mdi:restore" /> Reset</button><button type="submit" class="btn btn-primary" :disabled="saving"><Icon :name="saving ? 'mdi:loading' : 'mdi:content-save-outline'" :class="{ 'animate-spin': saving }" /> {{ saving ? 'Menyimpan...' : 'Simpan perubahan' }}</button></div>
+      <div class="sticky bottom-4 flex flex-wrap justify-end gap-3 rounded-2xl border border-line bg-white/95 p-4 shadow-xl backdrop-blur"><button type="submit" class="btn btn-primary" :disabled="saving"><Icon :name="saving ? 'mdi:loading' : 'mdi:content-save-outline'" :class="{ 'animate-spin': saving }" /> {{ saving ? 'Menyimpan...' : 'Simpan perubahan' }}</button></div>
     </form>
   </div>
 </template>

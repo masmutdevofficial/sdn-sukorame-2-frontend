@@ -1,6 +1,11 @@
-# SDN Sukorame 2 — Sekolah SAKTI
+# SDN Sukorame 2 — Frontend
 
-Frontend Nuxt hybrid untuk website publik dan admin panel demo. Tidak ada backend, endpoint Nitro, database, atau autentikasi sungguhan.
+Frontend Nuxt untuk website publik dan panel admin SD Negeri Sukorame 2.
+
+- API Fastify: `https://api.sdnsukorame2kotakediri.sch.id/api/v1`
+- CDN Cloudflare R2: `https://cdn.sdnsukorame2kotakediri.sch.id`
+- Seluruh konten dinamis dibaca dan disimpan melalui API Fastify.
+- Halaman admin tersedia di `/admin/login` dan menggunakan akun yang dibuat oleh seeder backend.
 
 ## Menjalankan
 
@@ -9,7 +14,4 @@ npm install
 npm run dev
 npm run typecheck
 npm run build
-npm run preview
 ```
-
-Admin demo: `/admin/login`, email `admin@demo.local`, kata sandi `admin123`. Data CRUD disimpan pada localStorage browser dengan key `sdn-sukorame-2-demo-db-v1`.

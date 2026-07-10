@@ -1,13 +1,21 @@
-import { defaultSchoolModules } from '~/data/dummy/school-modules'
-import { schoolModulesRepository } from '~/repositories/dummy/school-modules.repository'
+import { schoolModulesRepository } from '~/repositories/http/school-modules.repository'
+import type { SchoolModulesData } from '~/types/school-modules'
+
+const emptyModules = (): SchoolModulesData => ({
+  school: { name:'',fullName:'',brand:'',tagline:'',vision:'',npsn:'',nss:'',nis:'',address:'',postal:'',email:'',founded:'',headmaster:'' },
+  profileSections: [], teachers: [], academicDocuments: [], programCategories: [], programs: [], studentCategories: [], studentActivities: [], informationCategories: [], informationItems: [], gallery: [],
+  contact: { title:'',description:'',address:'',email:'',phone:'',mapEmbedUrl:'',image:'' },
+  ppdb: { title:'',description:'',startDate:'',endDate:'',countdownEnabled:false,image:'',requirements:[],steps:[],faqs:[] },
+})
 
 export const useSchoolModules = () => {
   const toast = useToast()
-  const { data: modules, pending: loading, refresh } = useAsyncData(
-    import.meta.client && sessionStorage.getItem('sdn-demo-auth') === '1' ? 'school-modules-admin' : 'school-modules-public',
+  const asyncData = useAsyncData(
+    import.meta.client && sessionStorage.getItem('sdn-admin-session') === '1' ? 'school-modules-admin' : 'school-modules-public',
     () => schoolModulesRepository.get(),
-    { default: () => structuredClone(defaultSchoolModules) },
+    { default: emptyModules },
   )
+  const { data: modules, pending: loading, refresh } = asyncData
   const saving = ref(false)
   const notice = ref('')
   const load = async () => { await refresh() }
@@ -23,5 +31,5 @@ export const useSchoolModules = () => {
       saving.value = false
     }
   }
-  return { modules, loading, saving, notice, load, save }
+  return { modules, loading, saving, notice, load, save, ready: asyncData }
 }

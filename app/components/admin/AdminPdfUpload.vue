@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mediaRepository } from '~/repositories/dummy/media.repository'
+import { mediaRepository } from '~/repositories/http/media.repository'
 const props = defineProps<{ modelValue: string, filename?: string }>()
 const emit = defineEmits<{ 'update:modelValue': [value: string], 'update:filename': [value: string] }>()
 const error = ref('')

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mediaRepository } from '~/repositories/dummy/media.repository'
+import { mediaRepository } from '~/repositories/http/media.repository'
 const props=withDefaults(defineProps<{modelValue?:string;label?:string;alt?:string}>(),{modelValue:'',label:'Gambar',alt:'Pratinjau gambar'});const emit=defineEmits<{'update:modelValue':[value:string]}>();const uploading=ref(false),dragging=ref(false),error=ref('');const toast=useToast();
 const validate=(file:File)=>{const extensions=['jpg','jpeg','png','webp'];const extension=file.name.split('.').pop()?.toLowerCase();if(!extension||!extensions.includes(extension)||!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('Format gambar harus JPG, JPEG, PNG, atau WEBP.');if(file.size>2*1024*1024)throw new Error('Ukuran gambar maksimal 2 MB.')}
 const process=async(file?:File)=>{if(!file)return;uploading.value=true;error.value='';try{validate(file);const asset=await mediaRepository.upload(file,props.alt);emit('update:modelValue',asset.url)}catch(uploadError){error.value=uploadError instanceof Error?uploadError.message:'Upload gagal';toast.warning(error.value,'Ups, gambar ditolak')}finally{uploading.value=false}}

@@ -1,15 +1,16 @@
 interface ApiSuccess<T> { success: true; data: T; message?: string }
 interface ApiFailure { success: false; message: string; errors?: unknown }
 const tokenKey = 'sdn-api-access-token'
+export const API_BASE_URL = 'https://api.sdnsukorame2kotakediri.sch.id/api/v1'
 export const R2_PUBLIC_URL = 'https://cdn.sdnsukorame2kotakediri.sch.id'
+export const DEFAULT_IMAGE_URL = `${R2_PUBLIC_URL}/images/no-image.png`
+export const DEFAULT_AVATAR_URL = `${R2_PUBLIC_URL}/images/user.png`
 
-export const apiBase = () => String(useRuntimeConfig().public.apiBase || '').replace(/\/$/, '')
-export const apiEnabled = () => Boolean(apiBase())
 export const getAccessToken = () => import.meta.client ? sessionStorage.getItem(tokenKey) : null
 export const setAccessToken = (token?: string) => { if (!import.meta.client) return; token ? sessionStorage.setItem(tokenKey, token) : sessionStorage.removeItem(tokenKey) }
 
 const refreshAccessToken = async () => {
-  const response = await $fetch<ApiSuccess<{ accessToken: string }>>(`${apiBase()}/auth/refresh`, { method: 'POST', credentials: 'include' })
+  const response = await $fetch<ApiSuccess<{ accessToken: string }>>(`${API_BASE_URL}/auth/refresh`, { method: 'POST', credentials: 'include' })
   setAccessToken(response.data.accessToken)
   return response.data.accessToken
 }
@@ -17,7 +18,7 @@ const refreshAccessToken = async () => {
 export const apiRequest = async <T>(path: string, options: Record<string, any> = {}, retry = true): Promise<T> => {
   const token = getAccessToken()
   try {
-    const response = await $fetch<ApiSuccess<T> | ApiFailure>(`${apiBase()}${path}`, {
+    const response = await $fetch<ApiSuccess<T> | ApiFailure>(`${API_BASE_URL}${path}`, {
       ...options,
       credentials: 'include',
       headers: { ...(options.headers || {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
