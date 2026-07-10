@@ -1,0 +1,77 @@
+import type { HomePageContent } from '~/types/page-content'
+
+export const defaultHomePageContent: HomePageContent = {
+  slug: 'beranda',
+  seo: {
+    title: 'Beranda',
+    description: 'Selaras dengan Alam, Berakhlak Mulia, Kritis, Terampil, dan Inovatif',
+  },
+  hero: {
+    eyebrow: 'NPSN 20534301 · Berdiri sejak 1957',
+    title: 'SD Negeri Sukorame 2',
+    highlightedTitle: 'Kota Kediri.',
+    description: 'Mewujudkan generasi pembelajar sepanjang hayat yang selaras dengan alam, berakhlak mulia, kritis, terampil, serta inovatif.',
+    image: '/images/no-image.png',
+    imageAlt: 'SD Negeri Sukorame 2 Kota Kediri',
+    primaryAction: { label: 'Profil sekolah', url: '/profil' },
+    secondaryAction: { label: 'Informasi sekolah', url: '/informasi/berita' },
+    cardTitle: 'Sekolah SAKTI',
+    cardDescription: 'Selaras dengan Alam · Berakhlak Mulia · Kritis · Terampil · Inovatif',
+    leftBadgeTitle: 'Ramah lingkungan',
+    leftBadgeDescription: 'Belajar dari alam',
+    rightBadgeTitle: 'Kreatif & inovatif',
+    rightBadgeDescription: 'Berani berkarya',
+    stats: [
+      { value: '1957', label: 'Tahun berdiri' },
+      { value: 'SAKTI', label: 'Nilai utama' },
+      { value: 'Kediri', label: 'Kota pendidikan' },
+    ],
+  },
+  welcome: {
+    eyebrow: 'Sambutan Kepala Sekolah',
+    title: 'Selamat datang di SD Negeri Sukorame 2 Kota Kediri.',
+    paragraphs: [
+      'Dengan memanjatkan puji syukur ke hadirat Tuhan Yang Maha Esa, kami menyambut kehadiran website SD Negeri Sukorame 2 sebagai media informasi sekolah bagi peserta didik, orang tua, alumni, dan masyarakat.',
+      'Melalui semangat Sekolah SAKTI, kami berkomitmen menyelenggarakan pendidikan yang selaras dengan alam, menguatkan akhlak mulia, serta mengembangkan kemampuan berpikir kritis, keterampilan, dan inovasi peserta didik.',
+    ],
+    quote: 'Sekolah adalah ruang bersama untuk belajar, membentuk karakter, dan menyiapkan generasi pembelajar sepanjang hayat.',
+    headmasterName: 'Lilis Khoirulina, M.Pd.I',
+    headmasterRole: 'Kepala Sekolah',
+    image: '/images/no-image.png',
+    imageAlt: 'Foto Kepala SD Negeri Sukorame 2',
+    action: { label: 'Profil lengkap sekolah', url: '/profil' },
+  },
+  values: {
+    eyebrow: 'Identitas karakter sekolah',
+    title: 'Nilai utama Sekolah SAKTI',
+    description: 'SAKTI merupakan identitas pendidikan SD Negeri Sukorame 2 yang menjadi dasar pembiasaan, pembelajaran, interaksi warga sekolah, dan kepedulian terhadap lingkungan.',
+    items: [
+      { letter: 'S', label: 'Selaras dengan Alam', icon: 'mdi:leaf', tone: 'bg-emerald-50 text-emerald-700' },
+      { letter: 'A', label: 'Berakhlak Mulia', icon: 'mdi:heart-outline', tone: 'bg-rose-50 text-rose-700' },
+      { letter: 'K', label: 'Kritis', icon: 'mdi:head-lightbulb-outline', tone: 'bg-amber-50 text-amber-700' },
+      { letter: 'T', label: 'Terampil', icon: 'mdi:tools', tone: 'bg-blue-50 text-blue-700' },
+      { letter: 'I', label: 'Inovatif', icon: 'mdi:rocket-launch-outline', tone: 'bg-violet-50 text-violet-700' },
+    ],
+  },
+  programs: {
+    eyebrow: 'Penyelenggaraan pendidikan',
+    title: 'Program SD Negeri Sukorame 2',
+    description: 'Program sekolah mendukung pelaksanaan pembelajaran, penguatan karakter SAKTI, literasi, kepedulian lingkungan, keterampilan, dan kreativitas peserta didik.',
+    action: { label: 'Daftar program sekolah', url: '/akademik/program-sekolah' },
+    itemLimit: 4,
+  },
+  news: {
+    eyebrow: 'Informasi sekolah',
+    title: 'Berita dan kegiatan',
+    action: { label: 'Arsip berita', url: '/informasi/berita' },
+    itemLimit: 3,
+  },
+  callToAction: {
+    eyebrow: 'SDN Sukorame 2 — Sekolah SAKTI',
+    title: 'Selaras dengan Alam, Berakhlak Mulia, Kritis, Terampil, dan Inovatif.',
+    description: 'SD Negeri Sukorame 2 beralamat di Jalan Himalaya No. 2, Kelurahan Sukorame, Kecamatan Mojoroto, Kota Kediri. Kepala Sekolah: Lilis Khoirulina, M.Pd.I.',
+    primaryAction: { label: 'Data sekolah', url: '/profil' },
+    secondaryAction: { label: 'Alamat dan kontak', url: '/kontak' },
+  },
+  updatedAt: '2026-07-10T00:00:00.000Z',
+}

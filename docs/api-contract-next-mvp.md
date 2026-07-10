@@ -22,3 +22,13 @@ Untuk `news`, `announcements`, `agendas`, `programs`, `extracurriculars`, `achie
 - `DELETE /api/v1/admin/{resource}/:id`
 
 Query list: `page`, `perPage`, `search`, `status`, `category`, `sortBy`, `sortOrder`. Auth Fastify kelak wajib menggantikan login demo sepenuhnya.
+
+## Konten Halaman
+
+Kontrak halaman tunggal menggunakan interface `PageContentRepository<T>` pada `app/types/page-content.ts`:
+
+- `GET /api/v1/public/pages/:slug` untuk mengambil konten halaman terbit.
+- `GET /api/v1/admin/pages/:slug` untuk mengambil konten halaman ke editor.
+- `PUT /api/v1/admin/pages/:slug` untuk mengganti seluruh konfigurasi halaman.
+
+Slug `beranda` memakai payload `HomePageContent`. Payload mencakup SEO, hero, statistik, sambutan kepala sekolah, nilai SAKTI, pengantar program, pengantar berita, CTA, tautan, dan gambar. Kartu program dan berita tetap menggunakan resource CRUD konten agar dapat dikelola secara individual.
