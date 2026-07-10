@@ -29,9 +29,7 @@ useSchoolSeo('Profil Sekolah', 'Profil dan pendidik SD Negeri Sukorame 2')
           >
             {{ section.title }}
           </component>
-          <p class="mt-5 max-w-2xl whitespace-pre-line leading-8 text-muted">
-            {{ section.body }}
-          </p>
+          <div class="profile-body mt-5 max-w-2xl text-muted" v-html="section.body" />
         </div>
 
         <div class="relative mx-auto w-full max-w-xl">
@@ -109,3 +107,7 @@ useSchoolSeo('Profil Sekolah', 'Profil dan pendidik SD Negeri Sukorame 2')
     </section>
   </div>
 </template>
+
+<style scoped>
+.profile-body{line-height:2;white-space:pre-line}.profile-body :deep(p){margin:0 0 1rem}.profile-body :deep(:is(h3,h4,h5,h6)){margin:1.25rem 0 .5rem;font-weight:800;color:#123a63;line-height:1.35}.profile-body :deep(:is(ul,ol)){margin:.75rem 0 1rem 1.25rem;padding-left:1rem}.profile-body :deep(ul){list-style:disc}.profile-body :deep(ol){list-style:decimal}.profile-body :deep(li){padding-left:.25rem}.profile-body :deep(a){font-weight:700;color:#1565a9;text-decoration:underline;text-underline-offset:3px}.profile-body :deep(blockquote){margin:1rem 0;border-left:4px solid #f6c945;padding:.75rem 1rem;background:#f8fafc;border-radius:.75rem}.profile-body :deep(table){margin:1rem 0;width:100%;border-collapse:collapse;overflow:hidden;border-radius:.75rem;background:white}.profile-body :deep(:is(th,td)){border:1px solid #e2e8f0;padding:.65rem;text-align:left}.profile-body :deep(th){background:#f8fafc;color:#123a63}
+</style>
