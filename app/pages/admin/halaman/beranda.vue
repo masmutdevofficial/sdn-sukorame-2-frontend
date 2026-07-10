@@ -10,6 +10,8 @@ const form = ref<HomePageContent>(structuredClone(defaultHomePageContent))
 const loading = ref(true)
 const saving = ref(false)
 const notice = ref('')
+const toast = useToast()
+const { confirm } = useAdminConfirm()
 
 onMounted(async () => {
   form.value = await homePageRepository.get('beranda')
@@ -18,16 +20,21 @@ onMounted(async () => {
 
 const save = async () => {
   saving.value = true
-  form.value = await homePageRepository.update('beranda', form.value)
-  saving.value = false
-  notice.value = 'Perubahan halaman beranda berhasil disimpan.'
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  try {
+    form.value = await homePageRepository.update('beranda', form.value)
+    notice.value = 'Perubahan halaman beranda berhasil disimpan.'
+    toast.success(notice.value)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : 'Beranda gagal disimpan.', 'Server error')
+  } finally { saving.value = false }
 }
 
 const reset = async () => {
-  if (!confirm('Kembalikan seluruh isi beranda ke data awal?')) return
+  if (!await confirm({ title: 'Reset Beranda?', message: 'Seluruh perubahan beranda akan dikembalikan ke data awal.', confirmLabel: 'Ya, reset' })) return
   form.value = await homePageRepository.reset('beranda')
   notice.value = 'Halaman beranda dikembalikan ke data awal.'
+  toast.info(notice.value)
 }
 
 </script>

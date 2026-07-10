@@ -9,7 +9,7 @@ const readAsDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
 
 export const mediaRepository: AssetRepository = {
   async upload(file, alt = '') {
-    if (!file.type.startsWith('image/')) throw new Error('File harus berupa gambar')
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('Format gambar harus JPG, JPEG, PNG, atau WEBP')
     if (file.size > 2 * 1024 * 1024) throw new Error('Ukuran gambar maksimal 2 MB')
     return {
       id: crypto.randomUUID(),

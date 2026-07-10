@@ -1,16 +1,8 @@
 <script setup lang="ts">
 import { mediaRepository } from '~/repositories/dummy/media.repository'
-const props = defineProps<{ modelValue: string[] }>()
-const emit = defineEmits<{ 'update:modelValue': [value: string[]] }>()
-const error = ref('')
-const upload = async (event: Event) => {
-  const files = [...((event.target as HTMLInputElement).files || [])]
-  error.value = ''
-  try {
-    const assets = await Promise.all(files.map(file => mediaRepository.upload(file)))
-    emit('update:modelValue', [...props.modelValue, ...assets.map(asset => asset.url)])
-  } catch (uploadError) { error.value = uploadError instanceof Error ? uploadError.message : 'Upload gagal' }
-}
-const remove = (index: number) => emit('update:modelValue', props.modelValue.filter((_, itemIndex) => itemIndex !== index))
+const props=defineProps<{modelValue:string[]}>();const emit=defineEmits<{'update:modelValue':[value:string[]]}>();const dragging=ref(false),error=ref('');const toast=useToast();
+const validate=(file:File)=>{const ext=file.name.split('.').pop()?.toLowerCase();if(!ext||!['jpg','jpeg','png','webp'].includes(ext)||!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error(`${file.name}: format harus JPG, JPEG, PNG, atau WEBP.`);if(file.size>2*1024*1024)throw new Error(`${file.name}: ukuran maksimal 2 MB.`)}
+const process=async(files:File[])=>{error.value='';try{files.forEach(validate);const assets=await Promise.all(files.map(file=>mediaRepository.upload(file)));emit('update:modelValue',[...props.modelValue,...assets.map(asset=>asset.url)])}catch(uploadError){error.value=uploadError instanceof Error?uploadError.message:'Upload gagal';toast.warning(error.value,'Ups, gambar ditolak')}}
+const change=(event:Event)=>process([...((event.target as HTMLInputElement).files||[])]);const drop=(event:DragEvent)=>{dragging.value=false;process([...(event.dataTransfer?.files||[])])};const remove=(index:number)=>emit('update:modelValue',props.modelValue.filter((_,itemIndex)=>itemIndex!==index))
 </script>
-<template><div class="grid gap-3"><span class="text-sm font-semibold">Gambar kegiatan</span><input type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif" class="rounded-xl border border-dashed border-line bg-slate-50 p-4" @change="upload"><p class="text-xs text-muted">Dapat memilih beberapa gambar sekaligus, maksimal 2 MB per gambar.</p><p v-if="error" class="text-sm text-red-700">{{ error }}</p><div class="flex flex-wrap gap-3"><div v-for="(image,index) in modelValue" :key="index" class="relative"><img :src="image" alt="Pratinjau" class="size-24 rounded-xl object-cover"><button type="button" class="absolute -right-2 -top-2 grid size-7 place-items-center rounded-full bg-red-600 text-white" @click="remove(index)"><Icon name="mdi:close" /></button></div></div></div></template>
+<template><div class="grid gap-3"><span class="text-sm font-semibold">Gambar kegiatan</span><label class="grid cursor-pointer place-items-center rounded-2xl border-2 border-dashed p-5 text-center" :class="dragging?'border-school-action bg-school-sky':'border-slate-300 bg-slate-50'" @dragenter.prevent="dragging=true" @dragover.prevent="dragging=true" @dragleave.prevent="dragging=false" @drop.prevent="drop"><input type="file" multiple accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="sr-only" @change="change"><Icon name="mdi:image-multiple-outline" size="38" class="text-school-action"/><b class="mt-2 text-school-navy">Klik atau tarik beberapa gambar</b><p class="text-xs text-muted">JPG, JPEG, PNG, WEBP · maksimal 2 MB per gambar</p></label><p v-if="error" class="text-sm text-red-700">{{error}}</p><div class="flex flex-wrap gap-3"><div v-for="(image,index) in modelValue" :key="index" class="relative"><img :src="image" alt="Pratinjau" class="size-24 rounded-xl object-cover"><button type="button" class="absolute -right-2 -top-2 grid size-7 place-items-center rounded-full bg-red-600 text-white" @click="remove(index)"><Icon name="mdi:close"/></button></div></div></div></template>
