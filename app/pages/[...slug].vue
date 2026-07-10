@@ -12,8 +12,8 @@ const slug = Array.isArray(rawSlug) ? rawSlug.join('/') : String(rawSlug || '')
 const path = `/${slug}`
 const initialContent = allContent.find(item => path.endsWith(`/${item.slug}`)) || null
 const initialPage = defaultSitePages.find(page => page.slug === slug) || null
-const content = ref<ContentItem | null>(initialContent)
-const sitePage = ref<SitePage | null>(initialPage)
+const { data: sitePage } = await useAsyncData<SitePage | null>(`site-page:${slug}`, () => sitePageRepository.getBySlug(slug), { default: () => initialPage })
+const { data: content } = await useAsyncData<ContentItem | null>(`site-content:${slug}`, () => initialContent ? contentRepository.getBySlug(initialContent.slug) : Promise.resolve(null), { default: () => initialContent })
 
 const title = computed(() => content.value?.title || sitePage.value?.title || 'Halaman Informasi')
 const excerpt = computed(() => content.value?.excerpt || sitePage.value?.excerpt || 'Informasi SDN Sukorame 2.')
@@ -23,14 +23,6 @@ const imageAlt = computed(() => sitePage.value?.imageAlt || `Gambar ${title.valu
 
 useSchoolSeo(title, excerpt)
 
-onMounted(async () => {
-  const [pageData, contentData] = await Promise.all([
-    sitePageRepository.getBySlug(slug),
-    initialContent ? contentRepository.getBySlug(initialContent.slug) : Promise.resolve(null),
-  ])
-  sitePage.value = pageData
-  if (contentData) content.value = contentData
-})
 </script>
 
 <template>

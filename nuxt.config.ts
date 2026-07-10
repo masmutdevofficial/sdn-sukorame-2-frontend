@@ -1,10 +1,14 @@
 import tailwindcss from '@tailwindcss/vite'
 
+const hasApi = Boolean(process.env.NUXT_PUBLIC_API_BASE)
+const dynamicPublic = { cache: { maxAge: 300, swr: true } }
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-07-09',
   experimental: { appManifest: false, payloadExtraction: false },
   devtools: { enabled: true },
   modules: ['@nuxt/icon', '@nuxt/image', '@nuxt/fonts', '@nuxtjs/sitemap', '@nuxtjs/robots', 'nuxt-schema-org'],
+  image: { domains: ['cdn.sdnsukorame2kotakediri.sch.id'] },
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   runtimeConfig: { public: { siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://sdn-sukorame-2.example', apiBase: process.env.NUXT_PUBLIC_API_BASE || '' } },
@@ -22,8 +26,8 @@ export default defineNuxtConfig({
     ],
   },
   routeRules: {
-    '/': { prerender: true }, '/profil/**': { prerender: true }, '/akademik/**': { prerender: true },
-    '/perpustakaan': { prerender: true }, '/kontak': { prerender: true }, '/faq': { prerender: true }, '/ppdb': { prerender: true },
+    '/': hasApi ? dynamicPublic : { prerender: true }, '/profil/**': hasApi ? dynamicPublic : { prerender: true }, '/akademik/**': hasApi ? dynamicPublic : { prerender: true },
+    '/perpustakaan': hasApi ? dynamicPublic : { prerender: true }, '/kontak': hasApi ? dynamicPublic : { prerender: true }, '/faq': hasApi ? dynamicPublic : { prerender: true }, '/ppdb': hasApi ? dynamicPublic : { prerender: true },
     '/informasi/**': { cache: { maxAge: 600, swr: true } },
     '/kesiswaan/**': { cache: { maxAge: 900, swr: true } },
     '/galeri/**': { cache: { maxAge: 900, swr: true } },
@@ -33,7 +37,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'cloudflare_module',
     prerender: {
-      routes: [
+      routes: hasApi ? [] : [
         '/profil',
         '/profil/sejarah',
         '/profil/visi-misi',

@@ -4,22 +4,14 @@ import { programs as defaultPrograms, school } from '~/data/dummy/content'
 import { contentRepository } from '~/repositories/dummy/content.repository'
 import { homePageRepository } from '~/repositories/dummy/home-page.repository'
 
-const page = ref(structuredClone(defaultHomePageContent))
-const programs = ref(defaultPrograms)
-const { modules } = useSchoolModules()
+const { data: page } = await useAsyncData('home-page', () => homePageRepository.get('beranda'), { default: () => structuredClone(defaultHomePageContent) })
+const { data: programs } = await useAsyncData('home-programs', async () => (await contentRepository.list({ category: 'Program Sekolah', status: 'published', perPage: 100 })).items, { default: () => defaultPrograms })
+const { modules } = await useSchoolModules()
 const news = computed(() => modules.value.informationItems.filter(item => item.status === 'published').sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(item => ({ ...item, category: modules.value.informationCategories.find(category => category.id === item.categoryId)?.name || 'Informasi', image: item.images[0] || '/images/no-image.png', excerpt: item.description, slug: item.id })))
 
 useSchoolSeo(() => page.value.seo.title, () => page.value.seo.description)
 useSchemaOrg([defineOrganization({ name: school.fullName }), defineWebSite({ name: school.fullName })])
 
-onMounted(async () => {
-  const [homeContent, programData] = await Promise.all([
-    homePageRepository.get('beranda'),
-    contentRepository.list({ category: 'Program Sekolah', status: 'published', perPage: 100 }),
-  ])
-  page.value = homeContent
-  programs.value = programData.items
-})
 </script>
 
 <template>

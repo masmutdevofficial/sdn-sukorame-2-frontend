@@ -6,19 +6,19 @@ useSeoMeta({ title: 'Settings Admin', robots: 'noindex, nofollow' })
 
 const { account, saveAccount } = useAdminAccount()
 const toast = useToast()
-const copyAccount = (value: AdminAccount): AdminAccount => ({ ...value })
+const copyAccount = (value: AdminAccount): AdminAccount => ({ ...value, password: '' })
 const form = ref<AdminAccount>(copyAccount(account.value))
 
 watch(account, value => { form.value = copyAccount(value) }, { immediate: true })
 
-const save = () => {
+const save = async () => {
   try {
-    saveAccount(form.value)
+    await saveAccount(form.value)
     toast.success('Data akun admin berhasil diperbarui.')
   } catch (error) {
     toast.error(error instanceof Error ? error.message : 'Data akun gagal disimpan.', 'Yah, gagal')
   }
 }
 </script>
-<template><div class="mx-auto max-w-3xl"><h1 class="text-3xl font-bold text-school-navy">Settings Akun</h1><p class="mt-1 text-muted">Perbarui identitas dan kredensial administrator.</p><form class="card mt-6 p-6" @submit.prevent="save"><div class="grid gap-4 md:grid-cols-2"><label class="field">Nama<input v-model="form.name" required></label><label class="field">Level pengguna<input v-model="form.level" required></label><label class="field">Email login<input v-model="form.email" type="email" required></label><label class="field">Password<input v-model="form.password" type="password" minlength="6" required></label><div class="md:col-span-2"><AdminImageUpload v-model="form.avatar" alt="Avatar admin" label="Avatar"/></div></div><button class="btn btn-primary mt-6 float-right"><Icon name="mdi:content-save-outline"/> Simpan Settings</button></form></div></template>
+<template><div class="mx-auto max-w-3xl"><h1 class="text-3xl font-bold text-school-navy">Settings Akun</h1><p class="mt-1 text-muted">Perbarui identitas dan kredensial administrator.</p><form class="card mt-6 p-6" @submit.prevent="save"><div class="grid gap-4 md:grid-cols-2"><label class="field">Nama<input v-model="form.name" required></label><label class="field">Level pengguna<input v-model="form.level" disabled></label><label class="field">Email login<input v-model="form.email" type="email" required></label><label class="field">Password baru<input v-model="form.password" type="password" minlength="8" placeholder="Kosongkan jika tidak diubah"></label><div class="md:col-span-2"><AdminImageUpload v-model="form.avatar" alt="Avatar admin" label="Avatar"/></div></div><button class="btn btn-primary mt-6 float-right"><Icon name="mdi:content-save-outline"/> Simpan Settings</button></form></div></template>
 <style scoped>.field{display:grid;gap:.4rem;font-size:.875rem;font-weight:600}.field input{border:1px solid var(--color-line);border-radius:.75rem;padding:.75rem;background:white}</style>

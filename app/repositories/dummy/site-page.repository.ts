@@ -1,6 +1,7 @@
 import { defaultSitePages } from '~/data/dummy/site-pages'
 import type { ListQuery, PaginatedData } from '~/types/content'
 import type { SitePage, SitePageRepository } from '~/types/site-page'
+import { apiEnabled, apiRequest } from '~/repositories/http/api'
 
 export const SITE_PAGE_STORAGE_KEY = 'sdn-sukorame-2-site-pages-v1'
 const seed = () => structuredClone(defaultSitePages)
@@ -24,7 +25,10 @@ export const sitePageRepository: SitePageRepository = {
     return { items: pages.slice((page - 1) * perPage, page * perPage), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } }
   },
   async getById(id) { return read().find(page => page.id === id) || null },
-  async getBySlug(slug) { return read().find(page => page.slug === slug) || null },
+  async getBySlug(slug) {
+    if (apiEnabled()) { try { return await apiRequest<SitePage>(`/public/pages/${encodeURIComponent(slug)}`) } catch { return read().find(page => page.slug === slug) || null } }
+    return read().find(page => page.slug === slug) || null
+  },
   async create(data) {
     const pages = read()
     if (pages.some(page => page.slug === data.slug)) throw new Error('Slug halaman sudah digunakan')

@@ -3,11 +3,14 @@ import { schoolModulesRepository } from '~/repositories/dummy/school-modules.rep
 
 export const useSchoolModules = () => {
   const toast = useToast()
-  const modules = ref(structuredClone(defaultSchoolModules))
-  const loading = ref(true)
+  const { data: modules, pending: loading, refresh } = useAsyncData(
+    import.meta.client && sessionStorage.getItem('sdn-demo-auth') === '1' ? 'school-modules-admin' : 'school-modules-public',
+    () => schoolModulesRepository.get(),
+    { default: () => structuredClone(defaultSchoolModules) },
+  )
   const saving = ref(false)
   const notice = ref('')
-  const load = async () => { modules.value = await schoolModulesRepository.get(); loading.value = false }
+  const load = async () => { await refresh() }
   const save = async (message = 'Perubahan berhasil disimpan.') => {
     saving.value = true
     try {
@@ -20,6 +23,5 @@ export const useSchoolModules = () => {
       saving.value = false
     }
   }
-  onMounted(load)
   return { modules, loading, saving, notice, load, save }
 }

@@ -3,7 +3,7 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 useSeoMeta({ title: 'Dashboard Admin', robots: 'noindex, nofollow' })
 
 const { account } = useAdminAccount()
-const { modules, loading } = useSchoolModules()
+const { modules, loading } = await useSchoolModules()
 const now = ref(new Date())
 let timer: ReturnType<typeof setInterval> | undefined
 
