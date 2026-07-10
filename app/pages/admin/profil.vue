@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toRaw } from 'vue'
 import type { EditableSection, Teacher } from '~/types/school-modules'
 
 definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
@@ -9,6 +10,7 @@ const toast = useToast()
 const editingTeacher = ref<number | null>(null)
 const teacherForm = ref<Teacher>({ id: '', name: '', role: '', bio: '', image: '', status: 'draft' })
 const htmlSectionIds = ['history', 'vision']
+const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(toRaw(value))) as T
 
 const supportsHtml = (section: EditableSection) => htmlSectionIds.includes(section.id)
 
@@ -16,7 +18,7 @@ const editTeacher = (index?: number) => {
   editingTeacher.value = index ?? -1
   teacherForm.value = index === undefined
     ? { id: crypto.randomUUID(), name: '', role: '', bio: '', image: '', status: 'draft' }
-    : structuredClone(modules.value.teachers[index]!)
+    : clone(modules.value.teachers[index]!)
 }
 
 const storeTeacher = () => {
@@ -81,7 +83,7 @@ const removeTeacher = async (index: number) => {
           <h2 class="text-xl font-bold text-school-navy">
             Pendidik
           </h2>
-          <button class="btn btn-primary" @click="editTeacher()">
+          <button type="button" class="btn btn-primary" @click="editTeacher()">
             <Icon name="mdi:plus" />
             Tambah
           </button>
@@ -95,17 +97,17 @@ const removeTeacher = async (index: number) => {
                 {{ teacher.role }} - {{ teacher.status }}
               </p>
             </div>
-            <button @click="editTeacher(index)">
+            <button type="button" @click="editTeacher(index)">
               <Icon name="mdi:pencil" />
             </button>
-            <button class="text-red-700" @click="removeTeacher(index)">
+            <button type="button" class="text-red-700" @click="removeTeacher(index)">
               <Icon name="mdi:delete" />
             </button>
           </article>
         </div>
       </section>
 
-      <button class="btn btn-primary justify-self-end" :disabled="saving" @click="save()">
+      <button type="button" class="btn btn-primary justify-self-end" :disabled="saving" @click="save()">
         <Icon name="mdi:content-save" />
         Simpan Profil
       </button>
@@ -124,7 +126,7 @@ const removeTeacher = async (index: number) => {
           <button type="button" class="btn btn-secondary" @click="editingTeacher = null">
             Batal
           </button>
-          <button class="btn btn-primary">
+          <button type="submit" class="btn btn-primary">
             Simpan pendidik
           </button>
         </div>
