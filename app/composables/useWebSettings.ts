@@ -20,7 +20,6 @@ export const useWebSettings = (scope: 'admin' | 'public' = 'public') => {
       notice.value = message
       toast.success(message)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Settings web gagal disimpan.', 'Server error')
       throw error
     } finally {
       saving.value = false

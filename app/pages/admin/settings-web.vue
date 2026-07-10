@@ -31,14 +31,24 @@ const normalizeKeywords = () => keywordsText.value
   .map(item => item.trim())
   .filter(Boolean)
 
+const normalizeUrl = (value: string) => {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
+}
+
 const submit = async () => {
   try {
     const payload = cloneSettings(form.value)
     payload.keywords = normalizeKeywords()
     payload.extraMetaTags = payload.extraMetaTags.filter((tag: ExtraMetaTag) => tag.content && (tag.name || tag.property))
+    socialKeys.forEach((key) => {
+      payload.socialMedia[key].url = normalizeUrl(payload.socialMedia[key].url)
+      payload.socialMedia[key].enabled = payload.socialMedia[key].enabled || Boolean(payload.socialMedia[key].url)
+    })
     await save(payload)
-  } catch {
-    toast.error('Periksa kembali isian settings web.', 'Gagal menyimpan')
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : 'Periksa kembali isian settings web.', 'Gagal menyimpan')
   }
 }
 </script>
@@ -54,7 +64,7 @@ const submit = async () => {
           Atur identitas website, SEO, meta sosial, favicon, logo, dan tautan sosial media.
         </p>
       </div>
-      <button class="btn btn-primary" :disabled="saving || loading" @click="submit">
+      <button type="submit" form="settings-web-form" class="btn btn-primary" :disabled="saving || loading">
         <Icon name="mdi:content-save-outline" />
         {{ saving ? 'Menyimpan...' : 'Simpan Settings Web' }}
       </button>
@@ -68,7 +78,7 @@ const submit = async () => {
       Memuat settings web...
     </div>
 
-    <form v-else class="mt-6 grid gap-6" @submit.prevent="submit">
+    <form v-else id="settings-web-form" class="mt-6 grid gap-6" @submit.prevent="submit">
       <section class="card p-6">
         <h2 class="text-xl font-bold text-school-navy">
           Identitas dan SEO Dasar
