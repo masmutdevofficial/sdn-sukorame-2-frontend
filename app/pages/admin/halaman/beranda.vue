@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defaultHomePageContent } from '~/data/dummy/home-page'
 import { homePageRepository } from '~/repositories/dummy/home-page.repository'
-import type { HomePageContent, HomeStat, SchoolValue } from '~/types/page-content'
+import type { HomePageContent } from '~/types/page-content'
 
 definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 useSeoMeta({ title: 'Edit Halaman Beranda', robots: 'noindex, nofollow' })
@@ -30,8 +30,6 @@ const reset = async () => {
   notice.value = 'Halaman beranda dikembalikan ke data awal.'
 }
 
-const addStat = () => form.value.hero.stats.push({ value: '', label: '' } satisfies HomeStat)
-const addValue = () => form.value.values.items.push({ letter: '', label: '', icon: 'mdi:star-outline', tone: 'bg-blue-50 text-blue-700' } satisfies SchoolValue)
 </script>
 
 <template>
@@ -54,8 +52,8 @@ const addValue = () => form.value.values.items.push({ letter: '', label: '', ico
           <label class="admin-field">Tombol utama<input v-model="form.hero.primaryAction.label" required></label><label class="admin-field">URL tombol utama<input v-model="form.hero.primaryAction.url" required></label><label class="admin-field">Tombol kedua<input v-model="form.hero.secondaryAction.label" required></label><label class="admin-field">URL tombol kedua<input v-model="form.hero.secondaryAction.url" required></label>
           <label class="admin-field">Judul kartu gambar<input v-model="form.hero.cardTitle" required></label><label class="admin-field">Deskripsi kartu gambar<input v-model="form.hero.cardDescription" required></label><label class="admin-field">Badge kiri<input v-model="form.hero.leftBadgeTitle" required></label><label class="admin-field">Keterangan badge kiri<input v-model="form.hero.leftBadgeDescription" required></label><label class="admin-field">Badge kanan<input v-model="form.hero.rightBadgeTitle" required></label><label class="admin-field">Keterangan badge kanan<input v-model="form.hero.rightBadgeDescription" required></label>
         </div>
-        <div class="subhead"><h3>Statistik</h3><button type="button" @click="addStat"><Icon name="mdi:plus" /> Tambah</button></div>
-        <div v-for="(stat, index) in form.hero.stats" :key="index" class="array-row md:grid-cols-[1fr_2fr_auto]"><label class="admin-field">Nilai<input v-model="stat.value" required></label><label class="admin-field">Label<input v-model="stat.label" required></label><button type="button" class="delete-button" aria-label="Hapus statistik" @click="form.hero.stats.splice(index, 1)"><Icon name="mdi:delete-outline" /></button></div>
+        <div class="subhead"><h3>Statistik</h3></div>
+        <div v-for="(stat, index) in form.hero.stats" :key="index" class="array-row md:grid-cols-2"><label class="admin-field">Nilai<input v-model="stat.value" required></label><label class="admin-field">Label<input v-model="stat.label" required></label></div>
       </section>
 
       <section class="card p-6">
@@ -66,8 +64,8 @@ const addValue = () => form.value.values.items.push({ letter: '', label: '', ico
       <section class="card p-6">
         <h2 class="section-title">Nilai SAKTI</h2>
         <div class="form-grid"><label class="admin-field">Label bagian<input v-model="form.values.eyebrow" required></label><label class="admin-field">Judul<input v-model="form.values.title" required></label><label class="admin-field md:col-span-2">Deskripsi<textarea v-model="form.values.description" required rows="3" /></label></div>
-        <div class="subhead"><h3>Daftar nilai</h3><button type="button" @click="addValue"><Icon name="mdi:plus" /> Tambah</button></div>
-        <div v-for="(value, index) in form.values.items" :key="index" class="array-row md:grid-cols-[.5fr_1.5fr_1.5fr_2fr_auto]"><label class="admin-field">Huruf<input v-model="value.letter" maxlength="2" required></label><label class="admin-field">Nama<input v-model="value.label" required></label><label class="admin-field">Ikon<input v-model="value.icon" required></label><label class="admin-field">Kelas warna<input v-model="value.tone" required></label><button type="button" class="delete-button" aria-label="Hapus nilai" @click="form.values.items.splice(index, 1)"><Icon name="mdi:delete-outline" /></button></div>
+        <div class="subhead"><h3>Daftar nilai</h3></div>
+        <div v-for="(value, index) in form.values.items" :key="index" class="array-row md:grid-cols-4"><label class="admin-field">Huruf<input v-model="value.letter" maxlength="2" required></label><label class="admin-field">Nama<input v-model="value.label" required></label><label class="admin-field">Ikon<input v-model="value.icon" required></label><label class="admin-field">Kelas warna<input v-model="value.tone" required></label></div>
       </section>
 
       <section v-for="section in ['programs', 'news'] as const" :key="section" class="card p-6">
