@@ -106,7 +106,7 @@ const welcomeMessages=[
     </section>
 
     <section class="container-school pb-20 lg:pb-28">
-      <div class="reveal relative overflow-hidden rounded-[2.2rem] bg-school-navy px-6 py-14 text-center text-white sm:px-12 lg:py-16">
+      <div v-reveal class="reveal relative overflow-hidden rounded-[2.2rem] bg-school-navy px-6 py-14 text-center text-white sm:px-12 lg:py-16">
         <div class="absolute -left-16 -top-20 size-60 rounded-full border-[35px] border-white/5" /><div class="absolute -bottom-24 -right-16 size-72 rounded-full bg-school-blue/20" />
         <div class="relative mx-auto max-w-3xl"><p class="font-hand text-3xl font-bold text-school-yellow">SDN Sukorame 2 — Sekolah SAKTI</p><h2 class="font-display mt-2 text-4xl sm:text-5xl">Selaras dengan Alam, Berakhlak Mulia, Kritis, Terampil, dan Inovatif.</h2><p class="mt-5 leading-7 text-blue-100">SD Negeri Sukorame 2 beralamat di Jalan Himalaya No. 2, Kelurahan Sukorame, Kecamatan Mojoroto, Kota Kediri. Kepala Sekolah: Lilis Khoirulina, M.Pd.I.</p><div class="mt-8 flex flex-wrap justify-center gap-3"><NuxtLink to="/profil" class="btn bg-school-yellow text-school-navy hover:shadow-xl">Data sekolah</NuxtLink><NuxtLink to="/kontak" class="btn border border-white/30 text-white hover:bg-white/10">Alamat dan kontak</NuxtLink></div></div>
       </div>
