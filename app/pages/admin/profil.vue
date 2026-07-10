@@ -6,7 +6,6 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 
 const { modules, loading, saving, notice, save } = useSchoolModules()
 const { confirm } = useAdminConfirm()
-const toast = useToast()
 const editingTeacher = ref<number | null>(null)
 const teacherForm = ref<Teacher>({ id: '', name: '', role: '', bio: '', image: '', status: 'draft' })
 const htmlSectionIds = ['history', 'vision']
@@ -21,19 +20,22 @@ const editTeacher = (index?: number) => {
     : clone(modules.value.teachers[index]!)
 }
 
-const storeTeacher = () => {
+const storeTeacher = async () => {
+  const message = editingTeacher.value === -1 ? 'Data pendidik berhasil ditambahkan.' : 'Data pendidik berhasil diperbarui.'
   if (editingTeacher.value === -1) modules.value.teachers.push(teacherForm.value)
   else modules.value.teachers[editingTeacher.value!] = teacherForm.value
   editingTeacher.value = null
-  toast.success('Data pendidik siap disimpan.')
+  await save(message)
 }
 
 const removeTeacher = async (index: number) => {
-  if (await confirm({
+  if (!await confirm({
     title: 'Hapus pendidik?',
     message: `Data "${modules.value.teachers[index]!.name}" akan dihapus.`,
     confirmLabel: 'Hapus',
-  })) modules.value.teachers.splice(index, 1)
+  })) return
+  modules.value.teachers.splice(index, 1)
+  await save('Data pendidik berhasil dihapus.')
 }
 </script>
 
@@ -126,8 +128,8 @@ const removeTeacher = async (index: number) => {
           <button type="button" class="btn btn-secondary" @click="editingTeacher = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary">
-            Simpan pendidik
+          <button type="submit" class="btn btn-primary" :disabled="saving">
+            {{ saving ? 'Menyimpan...' : 'Simpan pendidik' }}
           </button>
         </div>
       </form>

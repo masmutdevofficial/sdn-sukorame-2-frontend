@@ -27,8 +27,10 @@ export const useSchoolModules = () => {
       modules.value = await schoolModulesRepository.save(modules.value)
       notice.value = message
       toast.success(message)
+      return true
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Data tidak dapat disimpan.', 'Server error')
+      return false
     } finally {
       saving.value = false
     }

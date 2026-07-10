@@ -6,7 +6,6 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 
 const { modules, loading, saving, notice, save } = useSchoolModules()
 const { confirm } = useAdminConfirm()
-const toast = useToast()
 const editing = ref<number | null>(null)
 const form = ref<GalleryItem>({ id: '', title: '', description: '', image: '', status: 'draft' })
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(toRaw(value))) as T
@@ -18,17 +17,18 @@ const open = (index?: number) => {
     : clone(modules.value.gallery[index]!)
 }
 
-const store = () => {
+const store = async () => {
+  const message = editing.value === -1 ? 'Foto galeri berhasil ditambahkan.' : 'Foto galeri berhasil diperbarui.'
   if (editing.value === -1) modules.value.gallery.push(form.value)
   else modules.value.gallery[editing.value!] = form.value
   editing.value = null
-  toast.success('Foto galeri siap disimpan. Klik Simpan Galeri agar tersimpan permanen.')
+  await save(message)
 }
 
 const remove = async (index: number) => {
   if (!await confirm({ title: 'Hapus foto?', message: `Foto "${modules.value.gallery[index]!.title}" akan dihapus.`, confirmLabel: 'Hapus' })) return
   modules.value.gallery.splice(index, 1)
-  toast.success('Foto dihapus dari daftar. Klik Simpan Galeri agar tersimpan permanen.')
+  await save('Foto galeri berhasil dihapus.')
 }
 </script>
 
@@ -93,8 +93,8 @@ const remove = async (index: number) => {
           <button type="button" class="btn btn-secondary" @click="editing = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary" :disabled="!form.image">
-            Simpan
+          <button type="submit" class="btn btn-primary" :disabled="!form.image || saving">
+            {{ saving ? 'Menyimpan...' : 'Simpan' }}
           </button>
         </div>
       </form>

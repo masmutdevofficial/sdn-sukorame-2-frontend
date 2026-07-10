@@ -41,19 +41,7 @@ const socialLinks = computed(() => Object.values(settings.value.socialMedia).fil
         <h2 class="font-bold">
           Tautan
         </h2>
-        <div class="mt-3 grid gap-2 text-sm text-blue-100">
-          <NuxtLink to="/faq">
-            FAQ
-          </NuxtLink>
-          <NuxtLink to="/unduhan">
-            Unduhan
-          </NuxtLink>
-          <NuxtLink to="/admin/login">
-            Admin
-          </NuxtLink>
-        </div>
-
-        <div v-if="socialLinks.length" class="mt-5 flex flex-wrap gap-2">
+        <div v-if="socialLinks.length" class="mt-3 flex flex-wrap gap-2">
           <a
             v-for="item in socialLinks"
             :key="item.label"

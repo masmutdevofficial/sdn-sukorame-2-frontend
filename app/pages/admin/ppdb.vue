@@ -6,7 +6,6 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 
 const { modules, loading, saving, notice, save } = useSchoolModules()
 const { confirm } = useAdminConfirm()
-const toast = useToast()
 const reqIndex = ref<number | null>(null)
 const stepIndex = ref<number | null>(null)
 const faqIndex = ref<number | null>(null)
@@ -14,24 +13,24 @@ const reqForm = ref<PpdbRequirement>({ id: '', text: '' })
 const stepForm = ref<PpdbStep>({ id: '', title: '', description: '' })
 const faqForm = ref<PpdbFaq>({ id: '', question: '', answer: '' })
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(toRaw(value))) as T
-const pendingSaveMessage = 'Perubahan sudah masuk daftar. Klik Simpan PPDB agar tersimpan permanen.'
 
 const editReq = (index?: number) => {
   reqIndex.value = index ?? -1
   reqForm.value = index === undefined ? { id: crypto.randomUUID(), text: '' } : clone(modules.value.ppdb.requirements[index]!)
 }
 
-const storeReq = () => {
+const storeReq = async () => {
+  const message = reqIndex.value === -1 ? 'Syarat PPDB berhasil ditambahkan.' : 'Syarat PPDB berhasil diperbarui.'
   if (reqIndex.value === -1) modules.value.ppdb.requirements.push(reqForm.value)
   else modules.value.ppdb.requirements[reqIndex.value!] = reqForm.value
   reqIndex.value = null
-  toast.success(pendingSaveMessage, 'Syarat PPDB siap disimpan')
+  await save(message)
 }
 
 const removeReq = async (index: number) => {
   if (!await confirm({ title: 'Hapus syarat?', message: 'Syarat PPDB ini akan dihapus.', confirmLabel: 'Hapus' })) return
   modules.value.ppdb.requirements.splice(index, 1)
-  toast.success(pendingSaveMessage, 'Syarat PPDB dihapus')
+  await save('Syarat PPDB berhasil dihapus.')
 }
 
 const editStep = (index?: number) => {
@@ -39,17 +38,18 @@ const editStep = (index?: number) => {
   stepForm.value = index === undefined ? { id: crypto.randomUUID(), title: '', description: '' } : clone(modules.value.ppdb.steps[index]!)
 }
 
-const storeStep = () => {
+const storeStep = async () => {
+  const message = stepIndex.value === -1 ? 'Alur PPDB berhasil ditambahkan.' : 'Alur PPDB berhasil diperbarui.'
   if (stepIndex.value === -1) modules.value.ppdb.steps.push(stepForm.value)
   else modules.value.ppdb.steps[stepIndex.value!] = stepForm.value
   stepIndex.value = null
-  toast.success(pendingSaveMessage, 'Alur PPDB siap disimpan')
+  await save(message)
 }
 
 const removeStep = async (index: number) => {
   if (!await confirm({ title: 'Hapus alur?', message: `Langkah "${modules.value.ppdb.steps[index]!.title}" akan dihapus.`, confirmLabel: 'Hapus' })) return
   modules.value.ppdb.steps.splice(index, 1)
-  toast.success(pendingSaveMessage, 'Alur PPDB dihapus')
+  await save('Alur PPDB berhasil dihapus.')
 }
 
 const editFaq = (index?: number) => {
@@ -57,17 +57,18 @@ const editFaq = (index?: number) => {
   faqForm.value = index === undefined ? { id: crypto.randomUUID(), question: '', answer: '' } : clone(modules.value.ppdb.faqs[index]!)
 }
 
-const storeFaq = () => {
+const storeFaq = async () => {
+  const message = faqIndex.value === -1 ? 'FAQ PPDB berhasil ditambahkan.' : 'FAQ PPDB berhasil diperbarui.'
   if (faqIndex.value === -1) modules.value.ppdb.faqs.push(faqForm.value)
   else modules.value.ppdb.faqs[faqIndex.value!] = faqForm.value
   faqIndex.value = null
-  toast.success(pendingSaveMessage, 'FAQ PPDB siap disimpan')
+  await save(message)
 }
 
 const removeFaq = async (index: number) => {
   if (!await confirm({ title: 'Hapus FAQ?', message: `Pertanyaan "${modules.value.ppdb.faqs[index]!.question}" akan dihapus.`, confirmLabel: 'Hapus' })) return
   modules.value.ppdb.faqs.splice(index, 1)
-  toast.success(pendingSaveMessage, 'FAQ PPDB dihapus')
+  await save('FAQ PPDB berhasil dihapus.')
 }
 </script>
 
@@ -185,8 +186,8 @@ const removeFaq = async (index: number) => {
           <button type="button" class="btn btn-secondary" @click="reqIndex = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary">
-            Simpan
+          <button type="submit" class="btn btn-primary" :disabled="saving">
+            {{ saving ? 'Menyimpan...' : 'Simpan' }}
           </button>
         </div>
       </form>
@@ -200,8 +201,8 @@ const removeFaq = async (index: number) => {
           <button type="button" class="btn btn-secondary" @click="stepIndex = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary">
-            Simpan
+          <button type="submit" class="btn btn-primary" :disabled="saving">
+            {{ saving ? 'Menyimpan...' : 'Simpan' }}
           </button>
         </div>
       </form>
@@ -215,8 +216,8 @@ const removeFaq = async (index: number) => {
           <button type="button" class="btn btn-secondary" @click="faqIndex = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary">
-            Simpan
+          <button type="submit" class="btn btn-primary" :disabled="saving">
+            {{ saving ? 'Menyimpan...' : 'Simpan' }}
           </button>
         </div>
       </form>

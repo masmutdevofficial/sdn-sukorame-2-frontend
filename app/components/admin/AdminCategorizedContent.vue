@@ -2,7 +2,7 @@
 import { toRaw } from 'vue'
 import type { Activity, ModuleCategory } from '~/types/school-modules'
 
-const props = defineProps<{ title: string; description: string; categories: ModuleCategory[]; items: Activity[] }>()
+const props = defineProps<{ title: string; description: string; categories: ModuleCategory[]; items: Activity[]; persist?: (message?: string) => Promise<boolean> }>()
 const { confirm } = useAdminConfirm()
 const toast = useToast()
 
@@ -10,9 +10,21 @@ const categoryIndex = ref<number | null>(null)
 const itemIndex = ref<number | null>(null)
 const categoryForm = ref<ModuleCategory>({ id: '', name: '', description: '', status: 'draft' })
 const itemForm = ref<Activity>({ id: '', categoryId: '', title: '', description: '', date: '', images: [], status: 'draft' })
+const persisting = ref(false)
 
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(toRaw(value))) as T
-const pendingSaveMessage = 'Perubahan sudah masuk daftar. Klik tombol Simpan di halaman ini agar tersimpan permanen.'
+const persist = async (message: string) => {
+  if (!props.persist) {
+    toast.success(message)
+    return
+  }
+  persisting.value = true
+  try {
+    await props.persist(message)
+  } finally {
+    persisting.value = false
+  }
+}
 
 const editCategory = (index?: number) => {
   categoryIndex.value = index ?? -1
@@ -21,11 +33,12 @@ const editCategory = (index?: number) => {
     : clone(props.categories[index]!)
 }
 
-const storeCategory = () => {
+const storeCategory = async () => {
+  const message = categoryIndex.value === -1 ? 'Kategori berhasil ditambahkan.' : 'Kategori berhasil diperbarui.'
   if (categoryIndex.value === -1) props.categories.push(categoryForm.value)
   else props.categories[categoryIndex.value!] = categoryForm.value
   categoryIndex.value = null
-  toast.success(pendingSaveMessage, 'Kategori siap disimpan')
+  await persist(message)
 }
 
 const removeCategory = async (index: number) => {
@@ -41,7 +54,7 @@ const removeCategory = async (index: number) => {
     if (props.items[itemIndex]?.categoryId === category.id) props.items.splice(itemIndex, 1)
   }
   props.categories.splice(index, 1)
-  toast.success(pendingSaveMessage, 'Kategori dihapus')
+  await persist('Kategori berhasil dihapus.')
 }
 
 const editItem = (index?: number) => {
@@ -51,18 +64,19 @@ const editItem = (index?: number) => {
     : clone(props.items[index]!)
 }
 
-const storeItem = () => {
+const storeItem = async () => {
+  const message = itemIndex.value === -1 ? 'Konten berhasil ditambahkan.' : 'Konten berhasil diperbarui.'
   if (itemIndex.value === -1) props.items.push(itemForm.value)
   else props.items[itemIndex.value!] = itemForm.value
   itemIndex.value = null
-  toast.success(pendingSaveMessage, 'Konten siap disimpan')
+  await persist(message)
 }
 
 const removeItem = async (index: number) => {
   const item = props.items[index]!
   if (!await confirm({ title: 'Hapus konten?', message: `Konten "${item.title}" akan dihapus.`, confirmLabel: 'Hapus' })) return
   props.items.splice(index, 1)
-  toast.success(pendingSaveMessage, 'Konten dihapus')
+  await persist('Konten berhasil dihapus.')
 }
 
 const categoryName = (id: string) => props.categories.find(category => category.id === id)?.name || '-'
@@ -82,7 +96,7 @@ const categoryName = (id: string) => props.categories.find(category => category.
         <h2 class="text-xl font-bold">
           Kategori
         </h2>
-        <button type="button" class="btn btn-primary" @click="editCategory()">
+        <button type="button" class="btn btn-primary" :disabled="persisting" @click="editCategory()">
           <Icon name="mdi:plus" />
           Tambah kategori
         </button>
@@ -95,10 +109,10 @@ const categoryName = (id: string) => props.categories.find(category => category.
               {{ category.description }} · {{ category.status }}
             </p>
           </div>
-          <button type="button" aria-label="Edit kategori" @click="editCategory(index)">
+          <button type="button" aria-label="Edit kategori" :disabled="persisting" @click="editCategory(index)">
             <Icon name="mdi:pencil" />
           </button>
-          <button type="button" class="text-red-700" aria-label="Hapus kategori" @click="removeCategory(index)">
+          <button type="button" class="text-red-700" aria-label="Hapus kategori" :disabled="persisting" @click="removeCategory(index)">
             <Icon name="mdi:delete" />
           </button>
         </article>
@@ -110,7 +124,7 @@ const categoryName = (id: string) => props.categories.find(category => category.
         <h2 class="text-xl font-bold">
           Kegiatan / Konten
         </h2>
-        <button type="button" class="btn btn-primary" :disabled="!categories.length" @click="editItem()">
+        <button type="button" class="btn btn-primary" :disabled="!categories.length || persisting" @click="editItem()">
           <Icon name="mdi:plus" />
           Tambah
         </button>
@@ -124,10 +138,10 @@ const categoryName = (id: string) => props.categories.find(category => category.
               {{ categoryName(item.categoryId) }} · {{ item.date }} · {{ item.status }} · {{ item.images.length }} gambar
             </p>
           </div>
-          <button type="button" aria-label="Edit konten" @click="editItem(index)">
+          <button type="button" aria-label="Edit konten" :disabled="persisting" @click="editItem(index)">
             <Icon name="mdi:pencil" />
           </button>
-          <button type="button" class="text-red-700" aria-label="Hapus konten" @click="removeItem(index)">
+          <button type="button" class="text-red-700" aria-label="Hapus konten" :disabled="persisting" @click="removeItem(index)">
             <Icon name="mdi:delete" />
           </button>
         </article>
@@ -143,8 +157,8 @@ const categoryName = (id: string) => props.categories.find(category => category.
           <button type="button" class="btn btn-secondary" @click="categoryIndex = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary">
-            Simpan kategori
+          <button type="submit" class="btn btn-primary" :disabled="persisting">
+            {{ persisting ? 'Menyimpan...' : 'Simpan kategori' }}
           </button>
         </div>
       </form>
@@ -164,8 +178,8 @@ const categoryName = (id: string) => props.categories.find(category => category.
           <button type="button" class="btn btn-secondary" @click="itemIndex = null">
             Batal
           </button>
-          <button type="submit" class="btn btn-primary">
-            Simpan
+          <button type="submit" class="btn btn-primary" :disabled="persisting">
+            {{ persisting ? 'Menyimpan...' : 'Simpan' }}
           </button>
         </div>
       </form>
