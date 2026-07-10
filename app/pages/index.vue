@@ -9,11 +9,6 @@ const values=[
   {letter:'T',label:'Terampil',icon:'mdi:tools',tone:'bg-blue-50 text-blue-700'},
   {letter:'I',label:'Inovatif',icon:'mdi:rocket-launch-outline',tone:'bg-violet-50 text-violet-700'},
 ]
-const welcomeMessages=[
-  'SD Negeri Sukorame 2 Kota Kediri — NPSN 20534301',
-  'Sekolah SAKTI: Selaras dengan Alam, Berakhlak Mulia, Kritis, Terampil, dan Inovatif',
-  'Jalan Himalaya No. 2, Kelurahan Sukorame, Kecamatan Mojoroto, Kota Kediri',
-]
 </script>
 
 <template>
@@ -59,15 +54,29 @@ const welcomeMessages=[
       </div>
     </section>
 
-    <section class="border-y border-school-navy/10 bg-school-navy py-3.5 text-white" aria-label="Sambutan sekolah">
-      <div class="overflow-hidden">
-        <div class="ticker-track" tabindex="0">
-          <div v-for="round in 2" :key="round" class="ticker-group" :aria-hidden="round === 2">
-            <div v-for="(message,index) in welcomeMessages" :key="`${round}-${index}`" class="flex items-center gap-3 whitespace-nowrap text-sm sm:text-base">
-              <Icon name="mdi:star-four-points" class="text-school-yellow" size="17" />
-              <span :class="index === 0 ? 'font-bold text-white' : 'font-medium text-blue-100'">{{message}}</span>
+    <section class="relative bg-white py-20 lg:py-24" aria-labelledby="sambutan-kepala-sekolah">
+      <div class="container-school grid items-center gap-10 lg:grid-cols-[.78fr_1.22fr] lg:gap-16">
+        <div v-reveal class="relative mx-auto w-full max-w-sm">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-school-sky to-blue-100 shadow-[0_24px_60px_rgba(18,58,99,.14)]">
+            <div class="absolute inset-x-8 bottom-0 h-[78%] rounded-t-[50%] bg-white/55" />
+            <Icon name="mdi:account-tie" class="absolute bottom-0 left-1/2 -translate-x-1/2 text-school-navy/65" size="250" aria-label="Placeholder foto kepala sekolah" />
+            <div class="absolute inset-x-4 bottom-4 rounded-2xl bg-white/95 p-4 text-center shadow-lg backdrop-blur">
+              <b class="block text-school-navy">{{ school.headmaster }}</b>
+              <span class="mt-1 block text-xs font-semibold uppercase tracking-wider text-school-action">Kepala Sekolah</span>
             </div>
           </div>
+          <span class="float-slow absolute -left-5 top-8 grid size-14 place-items-center rounded-2xl bg-school-yellow text-school-navy shadow-lg"><Icon name="mdi:format-quote-open" size="28" /></span>
+        </div>
+
+        <div v-reveal>
+          <p class="font-hand text-3xl font-bold text-school-action">Sambutan Kepala Sekolah</p>
+          <h2 id="sambutan-kepala-sekolah" class="font-display mt-2 text-4xl leading-tight text-school-navy sm:text-5xl">Selamat datang di SD Negeri Sukorame 2 Kota Kediri.</h2>
+          <div class="mt-6 space-y-4 leading-8 text-slate-600">
+            <p>Dengan memanjatkan puji syukur ke hadirat Tuhan Yang Maha Esa, kami menyambut kehadiran website SD Negeri Sukorame 2 sebagai media informasi sekolah bagi peserta didik, orang tua, alumni, dan masyarakat.</p>
+            <p>Melalui semangat Sekolah SAKTI, kami berkomitmen menyelenggarakan pendidikan yang selaras dengan alam, menguatkan akhlak mulia, serta mengembangkan kemampuan berpikir kritis, keterampilan, dan inovasi peserta didik.</p>
+          </div>
+          <div class="mt-7 border-l-4 border-school-yellow pl-5"><p class="font-display text-xl text-school-navy">“Sekolah adalah ruang bersama untuk belajar, membentuk karakter, dan menyiapkan generasi pembelajar sepanjang hayat.”</p><p class="mt-3 text-sm font-bold text-school-action">{{ school.headmaster }}</p></div>
+          <NuxtLink to="/profil" class="mt-8 inline-flex items-center gap-2 font-bold text-school-action">Profil lengkap sekolah <Icon name="mdi:arrow-right" /></NuxtLink>
         </div>
       </div>
     </section>
