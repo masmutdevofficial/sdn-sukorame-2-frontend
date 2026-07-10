@@ -29,7 +29,7 @@ export interface SchoolModulesData {
 }
 
 export interface SchoolModulesRepository {
-  get(): Promise<SchoolModulesData>
+  get(scope?: 'admin' | 'public'): Promise<SchoolModulesData>
   save(data: SchoolModulesData): Promise<SchoolModulesData>
   reset(): Promise<SchoolModulesData>
 }

@@ -9,10 +9,12 @@ const emptyModules = (): SchoolModulesData => ({
 })
 
 export const useSchoolModules = () => {
+  const route = useRoute()
   const toast = useToast()
+  const scope = route.path.startsWith('/admin') ? 'admin' : 'public'
   const asyncData = useAsyncData(
-    import.meta.client && sessionStorage.getItem('sdn-admin-session') === '1' ? 'school-modules-admin' : 'school-modules-public',
-    () => schoolModulesRepository.get(),
+    `school-modules-${scope}`,
+    () => schoolModulesRepository.get(scope),
     { default: emptyModules },
   )
   const { data: modules, pending: loading, refresh } = asyncData
