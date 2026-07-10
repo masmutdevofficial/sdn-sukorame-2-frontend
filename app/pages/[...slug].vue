@@ -1,20 +1,47 @@
 <script setup lang="ts">
-import { school, allContent } from '~/data/dummy/content'
-const route=useRoute(); const raw=route.params.slug; const path='/'+(Array.isArray(raw)?raw.join('/'):String(raw||''))
-const labels:Record<string,[string,string,string]>={
-  '/profil':['Profil Sekolah','Mengenal SD Negeri Sukorame 2 lebih dekat.',school.vision],
-  '/profil/sejarah':['Sejarah','Perjalanan sekolah sejak tahun 1957.','SD Negeri Sukorame 2 berdiri pada tahun 1957 dan terus mendampingi generasi pembelajar di Kota Kediri.'],
-  '/profil/visi-misi':['Visi dan Misi','Arah pendidikan Sekolah SAKTI.',school.vision],
-  '/akademik/kurikulum':['Kurikulum','Pembelajaran bermakna dan berpihak pada murid.','Kurikulum demonstrasi akan diperbarui melalui admin.'],
-  '/akademik/program-sekolah':['Program Sekolah','Program yang mendukung tumbuh kembang murid.','Program pembelajaran, karakter, lingkungan, literasi, dan kreativitas.'],
-  '/perpustakaan':['Perpustakaan','Ruang literasi dan eksplorasi pengetahuan.','Informasi koleksi dan layanan akan diperbarui oleh sekolah.'],
-  '/kontak':['Kontak','Terhubung dengan sekolah.',`Alamat: ${school.address}. Informasi telepon dan email resmi belum diatur.`],
-  '/faq':['Pertanyaan Umum','Jawaban ringkas untuk orang tua dan masyarakat.','Informasi resmi tersedia melalui pengumuman website atau kunjungan ke sekolah.'],
-  '/unduhan':['Unduhan','Dokumen publik sekolah.','Dokumen saat ini merupakan metadata demonstrasi tanpa file sensitif.'],
-  '/galeri':['Galeri','Dokumentasi kegiatan Sekolah SAKTI.','Album foto demonstrasi untuk pratinjau tampilan.'],
-}
-const found=allContent.find(x=>path.endsWith('/'+x.slug))
-const page:[string,string,string]=found?[found.title,found.excerpt,found.body]:(labels[path]||['Halaman Informasi','Informasi SDN Sukorame 2.','Konten halaman ini sedang disiapkan dan dapat dikelola melalui admin demo.'])
-useSchoolSeo(page[0],page[1])
+import { allContent, school } from '~/data/dummy/content'
+import { defaultSitePages } from '~/data/dummy/site-pages'
+import { contentRepository } from '~/repositories/dummy/content.repository'
+import { sitePageRepository } from '~/repositories/dummy/site-page.repository'
+import type { ContentItem } from '~/types/content'
+import type { SitePage } from '~/types/site-page'
+
+const route = useRoute()
+const rawSlug = route.params.slug
+const slug = Array.isArray(rawSlug) ? rawSlug.join('/') : String(rawSlug || '')
+const path = `/${slug}`
+const initialContent = allContent.find(item => path.endsWith(`/${item.slug}`)) || null
+const initialPage = defaultSitePages.find(page => page.slug === slug) || null
+const content = ref<ContentItem | null>(initialContent)
+const sitePage = ref<SitePage | null>(initialPage)
+
+const title = computed(() => content.value?.title || sitePage.value?.title || 'Halaman Informasi')
+const excerpt = computed(() => content.value?.excerpt || sitePage.value?.excerpt || 'Informasi SDN Sukorame 2.')
+const body = computed(() => content.value?.body || sitePage.value?.body || 'Konten halaman ini sedang disiapkan dan dapat dikelola melalui admin.')
+const image = computed(() => content.value?.image || sitePage.value?.image || '')
+const imageAlt = computed(() => sitePage.value?.imageAlt || `Gambar ${title.value}`)
+
+useSchoolSeo(title, excerpt)
+
+onMounted(async () => {
+  const [pageData, contentData] = await Promise.all([
+    sitePageRepository.getBySlug(slug),
+    initialContent ? contentRepository.getBySlug(initialContent.slug) : Promise.resolve(null),
+  ])
+  sitePage.value = pageData
+  if (contentData) content.value = contentData
+})
 </script>
-<template><section><div class="bg-school-sky py-14"><div class="container-school"><p class="text-sm font-semibold text-school-action">Beranda / {{page[0]}}</p><h1 class="mt-3 text-4xl font-bold text-school-navy">{{page[0]}}</h1><p class="mt-4 max-w-2xl text-lg">{{page[1]}}</p></div></div><article class="container-school py-12"><div class="card prose-school max-w-3xl overflow-hidden"><NuxtImg v-if="found" :src="found.image || '/images/no-image.png'" :alt="`Gambar ${found.title} belum tersedia`" width="512" height="512" class="h-72 w-full bg-slate-100 object-contain p-10" /><div class="p-7 md:p-10"><p v-for="paragraph in page[2].split('\n')" :key="paragraph">{{paragraph}}</p><div v-if="path==='/profil'" class="mt-8 grid gap-3 sm:grid-cols-2"><p><b>NPSN:</b> {{school.npsn}}</p><p><b>NSS:</b> {{school.nss}}</p><p><b>NIS:</b> {{school.nis}}</p><p><b>Kepala sekolah:</b> {{school.headmaster}}</p></div></div></div><div v-if="path==='/galeri'" class="mt-8 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3"><figure v-for="index in 6" :key="index" class="card overflow-hidden"><NuxtImg src="/images/no-image.png" :alt="`Gambar galeri ${index} belum tersedia`" width="512" height="512" loading="lazy" class="aspect-[4/3] w-full bg-slate-100 object-contain p-8" /><figcaption class="border-t border-line p-4 text-sm font-semibold text-school-navy">Dokumentasi belum tersedia</figcaption></figure></div></article></section></template>
+
+<template>
+  <section>
+    <div class="bg-school-sky py-14"><div class="container-school"><p class="text-sm font-semibold text-school-action">{{ sitePage?.eyebrow || 'Beranda' }} / {{ title }}</p><h1 class="mt-3 text-4xl font-bold text-school-navy">{{ title }}</h1><p class="mt-4 max-w-2xl text-lg">{{ excerpt }}</p></div></div>
+    <article class="container-school py-12">
+      <div class="card prose-school max-w-3xl overflow-hidden">
+        <img v-if="image" :src="image" :alt="imageAlt" class="h-72 w-full bg-slate-100 object-contain p-10">
+        <div class="p-7 md:p-10"><p v-for="(paragraph, index) in body.split('\n')" :key="index">{{ paragraph }}</p><div v-if="path === '/profil'" class="mt-8 grid gap-3 sm:grid-cols-2"><p><b>NPSN:</b> {{ school.npsn }}</p><p><b>NSS:</b> {{ school.nss }}</p><p><b>NIS:</b> {{ school.nis }}</p><p><b>Kepala sekolah:</b> {{ school.headmaster }}</p></div></div>
+      </div>
+      <div v-if="path === '/galeri'" class="mt-8 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3"><figure v-for="index in 6" :key="index" class="card overflow-hidden"><img :src="image || '/images/no-image.png'" :alt="`${imageAlt} ${index}`" class="aspect-[4/3] w-full bg-slate-100 object-contain p-8"><figcaption class="border-t border-line p-4 text-sm font-semibold text-school-navy">{{ title }}</figcaption></figure></div>
+    </article>
+  </section>
+</template>

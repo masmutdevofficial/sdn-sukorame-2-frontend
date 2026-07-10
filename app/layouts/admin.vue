@@ -9,7 +9,8 @@ const { logout } = useAuth()
       <p class="mt-1 text-xs text-blue-200">Panel frontend demo</p>
       <nav class="mt-8 grid gap-2">
         <NuxtLink to="/admin" class="rounded-lg p-3 hover:bg-white/10"><Icon name="mdi:view-dashboard-outline" /> Dashboard</NuxtLink>
-        <NuxtLink to="/admin/halaman/beranda" class="rounded-lg p-3 hover:bg-white/10"><Icon name="mdi:monitor-edit" /> Halaman Beranda</NuxtLink>
+        <NuxtLink to="/admin/halaman" class="rounded-lg p-3 hover:bg-white/10"><Icon name="mdi:monitor-edit" /> Semua Halaman</NuxtLink>
+        <NuxtLink to="/admin/halaman/beranda" class="rounded-lg p-3 hover:bg-white/10"><Icon name="mdi:home-edit-outline" /> Beranda</NuxtLink>
         <NuxtLink to="/admin/konten" class="rounded-lg p-3 hover:bg-white/10"><Icon name="mdi:file-document-edit-outline" /> Berita & Program</NuxtLink>
         <NuxtLink to="/" class="rounded-lg p-3 hover:bg-white/10"><Icon name="mdi:web" /> Lihat Website</NuxtLink>
       </nav>

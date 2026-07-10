@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { allContent } from '~/data/dummy/content'
+import { defaultSitePages } from '~/data/dummy/site-pages'
+import { contentRepository } from '~/repositories/dummy/content.repository'
+import { sitePageRepository } from '~/repositories/dummy/site-page.repository'
 
 const route = useRoute()
 const categoryMap: Record<string, string> = {
@@ -9,12 +12,15 @@ const categoryMap: Record<string, string> = {
 }
 
 const title = computed(() => categoryMap[String(route.params.jenis)] || 'Informasi')
+const items = ref(allContent)
+const pageSlug = computed(() => `informasi/${String(route.params.jenis)}`)
+const page = ref(structuredClone(defaultSitePages.find(item => item.slug === pageSlug.value) || defaultSitePages[3]!))
 const search = ref('')
 const currentPage = ref(1)
 const itemsPerPage = 3
 const resultsSection = useTemplateRef<HTMLElement>('resultsSection')
 
-const categoryItems = computed(() => allContent
+const categoryItems = computed(() => items.value
   .filter(item => item.category === title.value)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
 )
@@ -85,19 +91,31 @@ watch(search, () => {
 watch(() => route.params.jenis, () => {
   search.value = ''
   currentPage.value = 1
+  loadPage()
 })
 
-useSchoolSeo(title.value, `Daftar ${title.value.toLowerCase()} SDN Sukorame 2`)
+const loadPage = async () => {
+  const [pageData, contentData] = await Promise.all([
+    sitePageRepository.getBySlug(pageSlug.value),
+    contentRepository.list({ status: 'published', perPage: 100 }),
+  ])
+  if (pageData) page.value = pageData
+  items.value = contentData.items
+}
+
+onMounted(loadPage)
+useSchoolSeo(() => page.value.title, () => page.value.excerpt)
 </script>
 
 <template>
   <section>
     <div class="relative overflow-hidden bg-school-sky py-14 lg:py-16">
       <div class="hero-grid absolute inset-0" aria-hidden="true" />
-      <div class="container-school relative">
-        <p class="font-hand text-2xl font-bold text-school-action">Informasi Sekolah</p>
-        <h1 class="font-display mt-2 text-5xl text-school-navy sm:text-6xl">{{ title }}</h1>
-        <p class="mt-4 max-w-2xl leading-7 text-slate-600">Temukan catatan kegiatan dan informasi terbaru dari SD Negeri Sukorame 2 Kota Kediri.</p>
+      <div class="container-school relative grid items-center gap-6 md:grid-cols-[1fr_auto]">
+        <div><p class="font-hand text-2xl font-bold text-school-action">{{ page.eyebrow }}</p>
+        <h1 class="font-display mt-2 text-5xl text-school-navy sm:text-6xl">{{ page.title }}</h1>
+        <p class="mt-4 max-w-2xl leading-7 text-slate-600">{{ page.excerpt }}</p><p v-if="page.body && page.body !== page.excerpt" class="mt-2 max-w-2xl leading-7 text-slate-600">{{ page.body }}</p></div>
+        <img v-if="page.image" :src="page.image" :alt="page.imageAlt" class="size-36 rounded-xl bg-white object-contain">
       </div>
     </div>
 

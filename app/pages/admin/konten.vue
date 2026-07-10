@@ -84,7 +84,7 @@ const reset = async () => {
         <label class="admin-field">Slug<input v-model="form.slug" required pattern="[a-z0-9-]+"></label>
         <label class="admin-field">Kategori<select v-model="form.category"><option>Berita</option><option>Program Sekolah</option><option>Pengumuman</option><option>Agenda</option><option>Ekstrakurikuler</option><option>Prestasi Demo</option><option>Karya Siswa Demo</option></select></label>
         <label class="admin-field">Status<select v-model="form.status"><option v-for="status in ['draft', 'published', 'archived'] as ContentStatus[]" :key="status" :value="status">{{ status }}</option></select></label>
-        <label class="admin-field">URL gambar<input v-model="form.image"></label>
+        <div class="md:col-span-2"><AdminImageUpload v-model="form.image" :alt="form.title" label="Gambar konten" /></div>
         <label class="admin-field md:col-span-2">Ringkasan<textarea v-model="form.excerpt" required rows="3" /></label>
         <label class="admin-field md:col-span-2">Isi konten<textarea v-model="form.body" required rows="8" /></label>
       </div>

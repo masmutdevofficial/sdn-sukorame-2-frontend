@@ -14,6 +14,6 @@ const stats = [
     <h1 class="text-3xl font-bold text-school-navy">Dashboard</h1>
     <p class="mt-2 text-muted">Ringkasan aktivitas konten demonstrasi.</p>
     <div class="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><article v-for="stat in stats" :key="stat.label" class="card p-5"><Icon :name="stat.icon" size="30" class="text-school-action" /><p class="mt-4 text-sm text-muted">{{ stat.label }}</p><b class="text-3xl text-school-navy">{{ stat.value }}</b></article></div>
-    <div class="card mt-7 p-6"><h2 class="text-xl font-bold text-school-navy">Aksi cepat</h2><div class="mt-5 flex flex-wrap gap-3"><NuxtLink to="/admin/halaman/beranda" class="btn btn-primary"><Icon name="mdi:monitor-edit" /> Edit beranda</NuxtLink><NuxtLink to="/admin/konten" class="btn btn-secondary"><Icon name="mdi:file-document-edit-outline" /> Berita & program</NuxtLink></div></div>
+    <div class="card mt-7 p-6"><h2 class="text-xl font-bold text-school-navy">Aksi cepat</h2><div class="mt-5 flex flex-wrap gap-3"><NuxtLink to="/admin/halaman" class="btn btn-primary"><Icon name="mdi:monitor-edit" /> Kelola halaman</NuxtLink><NuxtLink to="/admin/halaman/beranda" class="btn btn-secondary"><Icon name="mdi:home-edit-outline" /> Edit beranda</NuxtLink><NuxtLink to="/admin/konten" class="btn btn-secondary"><Icon name="mdi:file-document-edit-outline" /> Berita & program</NuxtLink></div></div>
   </div>
 </template>

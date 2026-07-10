@@ -4,8 +4,11 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/free-mode'
 import { school } from '~/data/dummy/content'
+import { defaultSitePages } from '~/data/dummy/site-pages'
+import { sitePageRepository } from '~/repositories/dummy/site-page.repository'
 
-useSchoolSeo('Profil Sekolah', `Identitas lengkap, visi, pendidik, dan informasi ${school.fullName}.`)
+const page = ref(structuredClone(defaultSitePages.find(item => item.slug === 'profil')!))
+useSchoolSeo(() => page.value.title, () => page.value.excerpt)
 useSchemaOrg([defineOrganization({ name: school.fullName, email: school.email })])
 
 const identities = [
@@ -54,6 +57,11 @@ onMounted(() => {
   motionPreference.addEventListener('change', syncMotionPreference)
 })
 
+onMounted(async () => {
+  const savedPage = await sitePageRepository.getBySlug('profil')
+  if (savedPage) page.value = savedPage
+})
+
 onBeforeUnmount(() => {
   motionPreference?.removeEventListener('change', syncMotionPreference)
 })
@@ -74,8 +82,8 @@ const sakti = [
       <div class="container-school relative">
         <p class="font-semibold text-school-action">Profil / Identitas Sekolah</p>
         <div class="mt-4 grid items-end gap-8 lg:grid-cols-[1fr_auto]">
-          <div><h1 class="font-display text-5xl leading-tight text-school-navy sm:text-6xl">{{ school.fullName }}</h1><p class="mt-5 max-w-3xl text-lg leading-8 text-slate-600">Sekolah dasar negeri di Kelurahan Sukorame, Kecamatan Mojoroto, Kota Kediri, dengan identitas pendidikan Sekolah SAKTI.</p></div>
-          <div class="rounded-2xl bg-white p-5 shadow-sm"><span class="text-xs font-bold uppercase tracking-wider text-muted">Nama pendek</span><b class="mt-1 block text-xl text-school-navy">SDN Sukorame 2</b></div>
+          <div><h1 class="font-display text-5xl leading-tight text-school-navy sm:text-6xl">{{ page.title }}</h1><p class="mt-5 max-w-3xl text-lg leading-8 text-slate-600">{{ page.excerpt }}</p><p v-if="page.body && page.body !== page.excerpt" class="mt-3 max-w-3xl leading-7 text-slate-600">{{ page.body }}</p></div>
+          <div class="rounded-2xl bg-white p-3 shadow-sm"><img :src="page.image || '/images/no-image.png'" :alt="page.imageAlt" class="size-36 rounded-xl object-contain"></div>
         </div>
       </div>
     </section>

@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { school } from '~/data/dummy/content'
+import { defaultSitePages } from '~/data/dummy/site-pages'
+import { sitePageRepository } from '~/repositories/dummy/site-page.repository'
+
+const page = ref(structuredClone(defaultSitePages.find(item => item.slug === 'ppdb')!))
 
 type RegistrationStatus = 'upcoming' | 'open' | 'selection' | 'closed'
 
@@ -67,7 +71,11 @@ const faqs = [
   { question: 'Ke mana saya dapat meminta informasi?', answer: `Silakan menghubungi sekolah melalui email ${school.email} atau datang ke alamat sekolah pada jam layanan.` },
 ]
 
-useSchoolSeo('PPDB', `Informasi status dan alur penerimaan peserta didik baru ${school.fullName}.`)
+useSchoolSeo(() => page.value.title, () => page.value.excerpt)
+onMounted(async () => {
+  const savedPage = await sitePageRepository.getBySlug('ppdb')
+  if (savedPage) page.value = savedPage
+})
 </script>
 
 <template>
@@ -81,10 +89,10 @@ useSchoolSeo('PPDB', `Informasi status dan alur penerimaan peserta didik baru ${
         <div class="hero-enter">
           <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold backdrop-blur">
             <Icon name="mdi:account-school-outline" size="20" class="text-school-yellow" />
-            Penerimaan Peserta Didik Baru
+            {{ page.eyebrow }}
           </div>
-          <h1 class="font-display mt-6 text-5xl leading-tight sm:text-6xl lg:text-7xl">Informasi PPDB<br><span class="text-school-yellow">SDN Sukorame 2</span></h1>
-          <p class="mt-6 max-w-2xl text-lg leading-8 text-blue-100">Satu halaman untuk memantau status, alur, dan informasi resmi penerimaan peserta didik baru.</p>
+          <h1 class="font-display mt-6 text-5xl leading-tight sm:text-6xl lg:text-7xl">{{ page.title }}</h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-blue-100">{{ page.excerpt }}</p><p v-if="page.body && page.body !== page.excerpt" class="mt-3 max-w-2xl leading-7 text-blue-100">{{ page.body }}</p>
 
           <div class="mt-8 flex flex-wrap gap-3">
             <span :class="currentStatus.tone" class="inline-flex items-center gap-2 rounded-full px-5 py-3 font-bold">
@@ -98,6 +106,7 @@ useSchoolSeo('PPDB', `Informasi status dan alur penerimaan peserta didik baru ${
         <div class="hero-visual relative">
           <div class="rounded-[2rem] border border-white/15 bg-white/10 p-3 shadow-2xl backdrop-blur-md">
             <div class="rounded-[1.5rem] bg-white p-7 text-ink sm:p-9">
+              <img v-if="page.image" :src="page.image" :alt="page.imageAlt" class="mb-6 h-40 w-full rounded-xl bg-slate-50 object-contain">
               <div class="flex items-start justify-between gap-4">
                 <span class="grid size-16 place-items-center rounded-2xl bg-amber-100 text-amber-700"><Icon :name="currentStatus.icon" size="34" /></span>
                 <span class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-muted">Status saat ini</span>

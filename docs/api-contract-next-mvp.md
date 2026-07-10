@@ -32,3 +32,15 @@ Kontrak halaman tunggal menggunakan interface `PageContentRepository<T>` pada `a
 - `PUT /api/v1/admin/pages/:slug` untuk mengganti seluruh konfigurasi halaman.
 
 Slug `beranda` memakai payload `HomePageContent`. Payload mencakup SEO, hero, statistik, sambutan kepala sekolah, nilai SAKTI, pengantar program, pengantar berita, CTA, tautan, dan gambar. Kartu program dan berita tetap menggunakan resource CRUD konten agar dapat dikelola secara individual.
+
+Semua halaman publik lain memakai payload `SitePage` dan endpoint CRUD berikut:
+
+- `GET /api/v1/public/pages/:slug`
+- `GET /api/v1/admin/pages` dan `GET /api/v1/admin/pages/:id`
+- `POST /api/v1/admin/pages`
+- `PATCH /api/v1/admin/pages/:id`
+- `DELETE /api/v1/admin/pages/:id`
+
+## Media
+
+Gambar tidak dikirim sebagai URL manual. Admin mengunggah file melalui `POST /api/v1/admin/media` dengan `multipart/form-data` (`file` dan `alt`). Respons mengembalikan `MediaAsset` berisi `id`, `url`, `filename`, `mimeType`, `size`, dan `alt`. Penghapusan aset memakai `DELETE /api/v1/admin/media/:id`. Batas awal frontend adalah gambar PNG/JPG/WEBP/GIF maksimal 2 MB.
