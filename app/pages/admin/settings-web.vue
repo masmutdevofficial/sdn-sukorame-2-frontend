@@ -9,7 +9,7 @@ const { settings, loading, saving, notice, save } = useWebSettings('admin')
 const toast = useToast()
 const socialKeys = ['facebook', 'instagram', 'tiktok', 'youtube'] as const
 
-const cloneSettings = (value?: WebSettings): WebSettings => structuredClone(value || defaultWebSettings())
+const cloneSettings = (value?: WebSettings): WebSettings => JSON.parse(JSON.stringify(value || defaultWebSettings())) as WebSettings
 const form = ref<WebSettings>(cloneSettings(settings.value))
 const keywordsText = ref('')
 
