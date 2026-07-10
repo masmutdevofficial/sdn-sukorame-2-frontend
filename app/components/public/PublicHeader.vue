@@ -30,7 +30,7 @@ onBeforeUnmount(() => {
     <a href="#main" class="sr-only focus:not-sr-only">Lewati ke konten utama</a>
     <div class="container-school flex h-18 items-center justify-between">
       <NuxtLink to="/" class="flex items-center gap-3" aria-label="SDN Sukorame 2 - Beranda">
-        <span class="grid size-11 place-items-center rounded-xl bg-school-blue text-white"><Icon name="mdi:school-outline" size="27" /></span>
+        <span class="grid size-12 place-items-center overflow-hidden rounded-xl border border-line bg-white p-1 shadow-sm"><img src="/logo.png" alt="Logo SDN Sukorame 2" class="size-full object-contain" /></span>
         <span><b class="block text-school-navy">SDN Sukorame 2</b><small class="text-muted">Sekolah SAKTI</small></span>
       </NuxtLink>
 
@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
         <aside v-if="open" id="mobile-navigation" class="fixed inset-y-0 left-0 z-[80] flex w-[min(86vw,360px)] flex-col bg-white shadow-2xl" role="dialog" aria-modal="true" aria-label="Menu navigasi mobile">
           <div class="flex items-center justify-between border-b border-line px-5 py-5">
             <div class="flex items-center gap-3">
-              <span class="grid size-10 place-items-center rounded-xl bg-school-blue text-white"><Icon name="mdi:school-outline" size="24" /></span>
+              <span class="grid size-11 place-items-center overflow-hidden rounded-xl border border-line bg-white p-1"><img src="/logo.png" alt="Logo SDN Sukorame 2" class="size-full object-contain" /></span>
               <span><b class="block text-school-navy">Menu Sekolah</b><small class="text-muted">SDN Sukorame 2</small></span>
             </div>
             <button autofocus class="grid size-10 place-items-center rounded-xl border border-line text-school-navy transition-colors hover:bg-slate-100" aria-label="Tutup menu" @click="closeMenu"><Icon name="mdi:close" size="25" /></button>
