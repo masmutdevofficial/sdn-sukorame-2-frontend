@@ -143,19 +143,19 @@ useSchoolSeo(title.value, `Daftar ${title.value.toLowerCase()} SDN Sukorame 2`)
         tag="div"
         class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
       >
-        <article v-for="item in visibleItems" :key="item.id" class="interactive-card card group flex min-h-80 flex-col overflow-hidden p-6">
-          <div class="flex items-start justify-between gap-4">
-            <span class="grid size-14 place-items-center rounded-2xl bg-school-sky text-school-action transition duration-300 group-hover:-rotate-3 group-hover:scale-105">
-              <Icon :name="item.icon || 'mdi:newspaper-variant-outline'" size="30" />
-            </span>
-            <time :datetime="item.date" class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-muted">{{ formatDate(item.date) }}</time>
+        <article v-for="item in visibleItems" :key="item.id" class="interactive-card card group flex min-h-96 flex-col overflow-hidden">
+          <div class="relative h-52 overflow-hidden bg-slate-100">
+            <NuxtImg :src="item.image || '/images/no-image.png'" :alt="`Gambar ${item.title} belum tersedia`" width="512" height="512" loading="lazy" class="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-105" />
+            <time :datetime="item.date" class="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-muted shadow-sm backdrop-blur">{{ formatDate(item.date) }}</time>
           </div>
-          <h2 class="mt-7 text-xl font-bold leading-8 text-school-navy">{{ item.title }}</h2>
-          <p class="mt-3 line-clamp-3 text-sm leading-6 text-muted">{{ item.excerpt }}</p>
-          <NuxtLink :to="`/informasi/${route.params.jenis}/${item.slug}`" class="mt-auto inline-flex items-center gap-2 pt-6 font-bold text-school-action">
-            Baca selengkapnya
-            <Icon name="mdi:arrow-right" class="transition-transform group-hover:translate-x-1" />
-          </NuxtLink>
+          <div class="flex flex-1 flex-col p-6">
+            <h2 class="text-xl font-bold leading-8 text-school-navy">{{ item.title }}</h2>
+            <p class="mt-3 line-clamp-3 text-sm leading-6 text-muted">{{ item.excerpt }}</p>
+            <NuxtLink :to="`/informasi/${route.params.jenis}/${item.slug}`" class="mt-auto inline-flex items-center gap-2 pt-6 font-bold text-school-action">
+              Baca selengkapnya
+              <Icon name="mdi:arrow-right" class="transition-transform group-hover:translate-x-1" />
+            </NuxtLink>
+          </div>
         </article>
       </TransitionGroup>
 

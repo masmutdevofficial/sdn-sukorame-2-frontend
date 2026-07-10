@@ -39,10 +39,9 @@ const values=[
         </div>
 
         <div class="hero-visual relative mx-auto w-full max-w-[520px] lg:mx-0">
-          <div class="relative aspect-[.94] overflow-hidden rounded-[2.5rem] border-[10px] border-white bg-school-blue shadow-[0_35px_80px_rgba(18,58,99,.18)]">
+          <div class="relative aspect-[.94] overflow-hidden rounded-[2.5rem] border-[10px] border-white bg-slate-100 shadow-[0_35px_80px_rgba(18,58,99,.18)]">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.35),transparent_35%)]" />
-            <div class="absolute inset-x-0 bottom-0 h-2/5 bg-school-navy/25" />
-            <div class="absolute left-1/2 top-[47%] -translate-x-1/2 -translate-y-1/2 text-white/95"><Icon name="mdi:school-outline" size="205" /></div>
+            <NuxtImg src="/images/no-image.png" alt="Gambar sekolah belum tersedia" width="512" height="512" loading="eager" fetchpriority="high" class="absolute inset-0 h-full w-full object-contain p-14 pb-28 sm:p-20 sm:pb-32" />
             <div class="absolute bottom-6 left-6 right-6 rounded-2xl bg-white/95 p-4 backdrop-blur">
               <p class="font-hand text-2xl font-bold text-school-action">Sekolah SAKTI</p>
               <p class="mt-1 text-xs leading-5 text-slate-600">Selaras dengan Alam · Berakhlak Mulia · Kritis · Terampil · Inovatif</p>
@@ -58,8 +57,7 @@ const values=[
       <div class="container-school grid items-center gap-10 lg:grid-cols-[.78fr_1.22fr] lg:gap-16">
         <div v-reveal class="relative mx-auto w-full max-w-sm">
           <div class="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-school-sky to-blue-100 shadow-[0_24px_60px_rgba(18,58,99,.14)]">
-            <div class="absolute inset-x-8 bottom-0 h-[78%] rounded-t-[50%] bg-white/55" />
-            <Icon name="mdi:account-tie" class="absolute bottom-0 left-1/2 -translate-x-1/2 text-school-navy/65" size="250" aria-label="Placeholder foto kepala sekolah" />
+            <NuxtImg src="/images/no-image.png" :alt="`Foto ${school.headmaster} belum tersedia`" width="512" height="512" loading="lazy" class="absolute inset-0 h-full w-full object-contain p-10 pb-28" />
             <div class="absolute inset-x-4 bottom-4 rounded-2xl bg-white/95 p-4 text-center shadow-lg backdrop-blur">
               <b class="block text-school-navy">{{ school.headmaster }}</b>
               <span class="mt-1 block text-xs font-semibold uppercase tracking-wider text-school-action">Kepala Sekolah</span>
@@ -108,7 +106,7 @@ const values=[
       <div class="reveal flex flex-wrap items-end justify-between gap-5"><div><p class="font-hand text-3xl font-bold text-school-action">Informasi sekolah</p><h2 class="font-display mt-1 text-4xl text-school-navy sm:text-5xl">Berita dan kegiatan</h2></div><NuxtLink to="/informasi/berita" class="btn btn-secondary">Arsip berita <Icon name="mdi:arrow-right" /></NuxtLink></div>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         <article v-for="(item,index) in news.slice(0,3)" :key="item.id" class="interactive-card reveal card group overflow-hidden" :style="`animation-range:entry ${index*3}% cover ${25+index*3}%`">
-          <div class="relative grid h-52 place-items-center overflow-hidden" :class="index===0?'bg-blue-100':index===1?'bg-emerald-100':'bg-amber-100'"><div class="absolute size-44 rounded-full bg-white/45 transition-transform duration-500 group-hover:scale-125" /><Icon name="mdi:newspaper-variant-outline" size="67" class="relative text-school-navy/65 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110" /><span class="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-bold text-school-navy">{{item.category}}</span></div>
+          <div class="relative h-52 overflow-hidden bg-slate-100"><NuxtImg :src="item.image || '/images/no-image.png'" :alt="`Gambar ${item.title} belum tersedia`" width="512" height="512" loading="lazy" class="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-105" /><span class="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-bold text-school-navy shadow-sm">{{item.category}}</span></div>
           <div class="p-6"><p class="text-xs font-semibold text-muted">{{new Date(item.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}}</p><h3 class="mt-3 text-lg font-bold leading-7 text-school-navy">{{item.title}}</h3><p class="mt-3 line-clamp-2 text-sm leading-6 text-muted">{{item.excerpt}}</p><NuxtLink :to="`/informasi/berita/${item.slug}`" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-school-action">Baca berita <Icon name="mdi:arrow-right" /></NuxtLink></div>
         </article>
       </div>

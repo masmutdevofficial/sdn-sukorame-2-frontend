@@ -20,15 +20,15 @@ const identities = [
 ]
 
 const educators = [
-  { role: 'Kepala Sekolah', name: school.headmaster, icon: 'mdi:account-tie' },
-  { role: 'Guru Kelas I', name: 'Belum diatur', icon: 'mdi:account-school-outline' },
-  { role: 'Guru Kelas II', name: 'Belum diatur', icon: 'mdi:account-school-outline' },
-  { role: 'Guru Kelas III', name: 'Belum diatur', icon: 'mdi:account-school-outline' },
-  { role: 'Guru Kelas IV', name: 'Belum diatur', icon: 'mdi:account-school-outline' },
-  { role: 'Guru Kelas V', name: 'Belum diatur', icon: 'mdi:account-school-outline' },
-  { role: 'Guru Kelas VI', name: 'Belum diatur', icon: 'mdi:account-school-outline' },
-  { role: 'Guru Mata Pelajaran', name: 'Belum diatur', icon: 'mdi:book-education-outline' },
-  { role: 'Tenaga Kependidikan', name: 'Belum diatur', icon: 'mdi:account-cog-outline' },
+  { role: 'Kepala Sekolah', name: school.headmaster },
+  { role: 'Guru Kelas I', name: 'Belum diatur' },
+  { role: 'Guru Kelas II', name: 'Belum diatur' },
+  { role: 'Guru Kelas III', name: 'Belum diatur' },
+  { role: 'Guru Kelas IV', name: 'Belum diatur' },
+  { role: 'Guru Kelas V', name: 'Belum diatur' },
+  { role: 'Guru Kelas VI', name: 'Belum diatur' },
+  { role: 'Guru Mata Pelajaran', name: 'Belum diatur' },
+  { role: 'Tenaga Kependidikan', name: 'Belum diatur' },
 ]
 
 const educatorCarouselModules = [A11y, Autoplay, FreeMode, Keyboard]
@@ -138,14 +138,12 @@ const sakti = [
         class="educator-swiper mt-10"
       >
         <SwiperSlide v-for="person in educators" :key="person.role">
-          <article class="interactive-card card group flex h-full min-h-44 flex-col justify-between overflow-hidden p-5">
-            <div class="flex items-start justify-between gap-4">
-              <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-school-sky text-school-action transition duration-300 group-hover:-rotate-3 group-hover:scale-105">
-                <Icon :name="person.icon" size="32" />
-              </span>
-              <Icon name="mdi:star-four-points" size="18" class="text-school-yellow" aria-hidden="true" />
+          <article class="interactive-card card group flex h-full flex-col overflow-hidden">
+            <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+              <NuxtImg src="/images/no-image.png" :alt="`Foto ${person.role} belum tersedia`" width="512" height="512" loading="lazy" class="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-105" />
+              <Icon name="mdi:star-four-points" size="18" class="absolute right-4 top-4 text-school-yellow" aria-hidden="true" />
             </div>
-            <div class="mt-7 border-t border-line pt-4">
+            <div class="border-t border-line p-5">
               <p class="text-xs font-bold uppercase tracking-wider text-muted">{{ person.role }}</p>
               <h3 class="mt-1 font-bold text-school-navy">{{ person.name }}</h3>
             </div>
