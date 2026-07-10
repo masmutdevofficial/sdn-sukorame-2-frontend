@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-07-09',
+  experimental: { appManifest: false, payloadExtraction: false },
   devtools: { enabled: true },
   modules: ['@nuxt/icon', '@nuxt/image', '@nuxt/fonts', '@nuxtjs/sitemap', '@nuxtjs/robots', 'nuxt-schema-org'],
   css: ['~/assets/css/main.css'],
@@ -23,7 +24,10 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true }, '/profil/**': { prerender: true }, '/akademik/**': { prerender: true },
     '/perpustakaan': { prerender: true }, '/kontak': { prerender: true }, '/faq': { prerender: true },
-    '/informasi/**': { swr: 600 }, '/kesiswaan/**': { swr: 900 }, '/galeri/**': { swr: 900 }, '/unduhan': { swr: 900 },
+    '/informasi/**': { cache: { maxAge: 600, swr: true } },
+    '/kesiswaan/**': { cache: { maxAge: 900, swr: true } },
+    '/galeri/**': { cache: { maxAge: 900, swr: true } },
+    '/unduhan': { cache: { maxAge: 900, swr: true } },
     '/admin': { ssr: false }, '/admin/**': { ssr: false, robots: false },
   },
   nitro: {
