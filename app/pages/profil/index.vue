@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { A11y, Autoplay, FreeMode, Keyboard } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/free-mode'
 import { school } from '~/data/dummy/content'
 
 useSchoolSeo('Profil Sekolah', `Identitas lengkap, visi, pendidik, dan informasi ${school.fullName}.`)
@@ -26,6 +30,33 @@ const educators = [
   { role: 'Guru Mata Pelajaran', name: 'Belum diatur', icon: 'mdi:book-education-outline' },
   { role: 'Tenaga Kependidikan', name: 'Belum diatur', icon: 'mdi:account-cog-outline' },
 ]
+
+const educatorCarouselModules = [A11y, Autoplay, FreeMode, Keyboard]
+const prefersReducedMotion = ref(false)
+let motionPreference: MediaQueryList | undefined
+
+const syncMotionPreference = (event: MediaQueryList | MediaQueryListEvent) => {
+  prefersReducedMotion.value = event.matches
+}
+
+const educatorAutoplay = computed(() => prefersReducedMotion.value
+  ? false
+  : {
+      delay: 0,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    },
+)
+
+onMounted(() => {
+  motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+  syncMotionPreference(motionPreference)
+  motionPreference.addEventListener('change', syncMotionPreference)
+})
+
+onBeforeUnmount(() => {
+  motionPreference?.removeEventListener('change', syncMotionPreference)
+})
 
 const sakti = [
   { letter: 'S', title: 'Selaras dengan Alam', text: 'Menumbuhkan kepedulian dan tanggung jawab terhadap lingkungan.', color: 'bg-emerald-50 text-emerald-700' },
@@ -73,6 +104,80 @@ const sakti = [
 
     <section id="sakti" class="scroll-mt-36 bg-white py-16 lg:py-20"><div class="container-school"><div class="max-w-2xl"><p class="font-hand text-3xl font-bold text-school-action">Identitas Pendidikan</p><h2 class="font-display mt-2 text-4xl text-school-navy">Makna Sekolah SAKTI</h2></div><div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5"><article v-for="item in sakti" :key="item.letter" class="interactive-card card p-5"><span :class="item.color" class="grid size-12 place-items-center rounded-2xl font-display text-2xl">{{ item.letter }}</span><h3 class="mt-5 font-bold text-school-navy">{{ item.title }}</h3><p class="mt-2 text-sm leading-6 text-muted">{{ item.text }}</p></article></div></div></section>
 
-    <section id="pendidik" class="container-school scroll-mt-36 py-16 lg:py-20"><div class="flex flex-wrap items-end justify-between gap-5"><div><p class="font-hand text-3xl font-bold text-school-action">Warga Sekolah</p><h2 class="font-display mt-2 text-4xl text-school-navy">Pendidik dan Tenaga Kependidikan</h2></div><span class="rounded-full bg-amber-100 px-4 py-2 text-xs font-bold text-amber-900">Data nama akan dilengkapi melalui admin</span></div><p class="mt-5 max-w-3xl leading-7 text-muted">Struktur berikut menampilkan fungsi pendidik tanpa mempublikasikan data pribadi yang belum dikonfirmasi.</p><div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"><article v-for="person in educators" :key="person.role" class="interactive-card card flex items-center gap-4 p-5"><span class="grid size-14 shrink-0 place-items-center rounded-full bg-school-sky text-school-action"><Icon :name="person.icon" size="29"/></span><div><p class="text-xs font-bold uppercase tracking-wider text-muted">{{ person.role }}</p><h3 class="mt-1 font-bold text-school-navy">{{ person.name }}</h3></div></article></div></section>
+    <section id="pendidik" class="container-school scroll-mt-36 overflow-hidden py-16 lg:py-20">
+      <div class="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p class="font-hand text-3xl font-bold text-school-action">Warga Sekolah</p>
+          <h2 class="font-display mt-2 text-4xl text-school-navy">Pendidik dan Tenaga Kependidikan</h2>
+        </div>
+        <span class="rounded-full bg-amber-100 px-4 py-2 text-xs font-bold text-amber-900">Data nama akan dilengkapi melalui admin</span>
+      </div>
+      <p class="mt-5 max-w-3xl leading-7 text-muted">Struktur berikut menampilkan fungsi pendidik tanpa mempublikasikan data pribadi yang belum dikonfirmasi.</p>
+
+      <Swiper
+        :modules="educatorCarouselModules"
+        :slides-per-view="1.12"
+        :space-between="16"
+        :loop="true"
+        :loop-additional-slides="3"
+        :speed="prefersReducedMotion ? 500 : 5000"
+        :autoplay="educatorAutoplay"
+        :free-mode="{ enabled: true, momentum: true, momentumBounce: false, sticky: false }"
+        :keyboard="{ enabled: true, onlyInViewport: true }"
+        :a11y="{
+          enabled: true,
+          containerMessage: 'Daftar pendidik dan tenaga kependidikan SD Negeri Sukorame 2',
+          slideLabelMessage: '{{index}} dari {{slidesLength}}',
+        }"
+        :grab-cursor="true"
+        :breakpoints="{
+          640: { slidesPerView: 2.05, spaceBetween: 18 },
+          1024: { slidesPerView: 3.05, spaceBetween: 20 },
+          1280: { slidesPerView: 4, spaceBetween: 20 },
+        }"
+        class="educator-swiper mt-10"
+      >
+        <SwiperSlide v-for="person in educators" :key="person.role">
+          <article class="interactive-card card group flex h-full min-h-44 flex-col justify-between overflow-hidden p-5">
+            <div class="flex items-start justify-between gap-4">
+              <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-school-sky text-school-action transition duration-300 group-hover:-rotate-3 group-hover:scale-105">
+                <Icon :name="person.icon" size="32" />
+              </span>
+              <Icon name="mdi:star-four-points" size="18" class="text-school-yellow" aria-hidden="true" />
+            </div>
+            <div class="mt-7 border-t border-line pt-4">
+              <p class="text-xs font-bold uppercase tracking-wider text-muted">{{ person.role }}</p>
+              <h3 class="mt-1 font-bold text-school-navy">{{ person.name }}</h3>
+            </div>
+          </article>
+        </SwiperSlide>
+      </Swiper>
+
+      <div class="mt-3 flex items-center gap-2 text-sm font-medium text-muted">
+        <Icon name="mdi:gesture-swipe-horizontal" size="20" class="text-school-action" aria-hidden="true" />
+        <span>Geser bebas untuk melihat seluruh susunan pendidik.</span>
+      </div>
+    </section>
   </div>
 </template>
+
+<style scoped>
+.educator-swiper {
+  padding: 0.25rem 0.25rem 1rem;
+}
+
+:deep(.educator-swiper .swiper-wrapper) {
+  align-items: stretch;
+  transition-timing-function: linear !important;
+}
+
+:deep(.educator-swiper .swiper-slide) {
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :deep(.educator-swiper .swiper-wrapper) {
+    transition-duration: 0.5s !important;
+  }
+}
+</style>

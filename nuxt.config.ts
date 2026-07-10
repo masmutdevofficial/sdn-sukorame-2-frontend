@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': { prerender: true }, '/profil/**': { prerender: true }, '/akademik/**': { prerender: true },
-    '/perpustakaan': { prerender: true }, '/kontak': { prerender: true }, '/faq': { prerender: true },
+    '/perpustakaan': { prerender: true }, '/kontak': { prerender: true }, '/faq': { prerender: true }, '/ppdb': { prerender: true },
     '/informasi/**': { cache: { maxAge: 600, swr: true } },
     '/kesiswaan/**': { cache: { maxAge: 900, swr: true } },
     '/galeri/**': { cache: { maxAge: 900, swr: true } },
@@ -42,6 +42,7 @@ export default defineNuxtConfig({
         '/perpustakaan',
         '/kontak',
         '/faq',
+        '/ppdb',
       ],
       ignore: ['/admin', '/admin/**'],
     },

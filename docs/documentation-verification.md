@@ -40,3 +40,7 @@ Konfigurasi diverifikasi pada 9 Juli 2026. Context7 gagal karena API key konekto
 Preset build yang digunakan adalah `cloudflare_module`, sesuai dokumentasi Nitro untuk format Workers Module. Assets berasal dari `.output/public` dan runtime memakai `nodejs_compat`. Wrangler menunjuk langsung ke `.output/server/index.mjs` sesuai panduan Cloudflare. `index.js` root menyimpan referensi entry untuk kebutuhan integrasi tanpa membungkus output framework.
 
 `experimental.appManifest` dan `payloadExtraction` dinonaktifkan karena aplikasi memakai data sinkron/dummy tanpa `useAsyncData` atau `useFetch`; data tetap di-inline dalam HTML SSR. Cache konten dinamis ditulis dalam bentuk eksplisit `cache: { maxAge, swr: true }`, bukan shorthand `swr`, untuk menghindari properti `payload` ganda yang dihasilkan Nuxt 4.4.8 pada bundle Cloudflare. Nitro tetap menerapkan stale-while-revalidate di server. Opsi payload didokumentasikan resmi di https://nuxt.com/docs/4.x/guide/going-further/experimental-features.
+
+## Carousel pendidik
+
+Pada pembaruan 9 Juli 2026, Context7 kembali tidak dapat digunakan karena API key konektor invalid. Implementasi Swiper 14.0.5 diverifikasi melalui dokumentasi resmi Swiper Vue di https://swiperjs.com/vue dan API di https://swiperjs.com/swiper-api. Carousel memakai modul `Autoplay`, `FreeMode`, `Keyboard`, dan `A11y`, serta menghormati preferensi sistem `prefers-reduced-motion`.
