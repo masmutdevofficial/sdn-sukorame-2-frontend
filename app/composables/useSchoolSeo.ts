@@ -1,0 +1,1 @@
+export const useSchoolSeo=(title:string,description:string)=>{const c=useRuntimeConfig();const route=useRoute();const canonical=computed(()=>`${c.public.siteUrl}${route.path}`);useSeoMeta({title,description,ogTitle:title,ogDescription:description,ogType:'website',ogUrl:canonical,twitterCard:'summary_large_image'});useHead({link:[{rel:'canonical',href:canonical}]})}

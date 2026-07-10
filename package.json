@@ -1,0 +1,36 @@
+{
+  "name": "sdn-sukorame-2-frontend",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "cf:dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:dry": "npm run build && wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "@nuxt/fonts": "^0.14.0",
+    "@nuxt/icon": "^2.3.1",
+    "@nuxt/image": "^2.0.0",
+    "@nuxtjs/robots": "^6.1.2",
+    "@nuxtjs/sitemap": "^8.2.2",
+    "@tailwindcss/vite": "^4.3.2",
+    "nuxt": "^4.4.8",
+    "nuxt-schema-org": "^6.2.3",
+    "tailwindcss": "^4.3.2",
+    "vue": "^3.5.39",
+    "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@types/node": "^26.1.1",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.7",
+    "wrangler": "^4.110.0"
+  }
+}

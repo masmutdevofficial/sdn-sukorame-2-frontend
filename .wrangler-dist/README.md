@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "sdn-sukorame-2-frontend" generated at 2026-07-10T06:00:01.002Z.
