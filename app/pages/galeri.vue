@@ -52,8 +52,8 @@ useSchoolSeo('Galeri', 'Galeri foto SD Negeri Sukorame 2')
     </section>
 
     <div class="container-school grid gap-5 py-12 sm:grid-cols-2 lg:grid-cols-3">
-      <figure v-for="item in items" :key="item.id" class="card group overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/10">
-        <PublicAutoImageSlider :images="[item.image]" :alt="item.title" />
+      <figure v-for="(item, index) in items" :key="item.id" class="card group overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/10">
+        <PublicAutoImageSlider :images="[item.image]" :lightbox-slides="featuredSlides" :lightbox-index="index" :alt="item.title" />
         <figcaption class="p-5">
           <b class="text-school-navy transition group-hover:text-school-action">{{ item.title }}</b>
           <p class="mt-2 text-sm text-muted">

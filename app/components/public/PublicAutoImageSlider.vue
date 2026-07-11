@@ -13,12 +13,16 @@ interface ImageSlide {
 const props = withDefaults(defineProps<{
   images?: string[]
   slides?: ImageSlide[]
+  lightboxSlides?: ImageSlide[]
+  lightboxIndex?: number
   alt: string
   aspectRatio?: string
   showCaptions?: boolean
 }>(), {
   images: () => [],
   slides: () => [],
+  lightboxSlides: () => [],
+  lightboxIndex: undefined,
   aspectRatio: '4 / 3',
   showCaptions: false,
 })
@@ -33,6 +37,8 @@ const normalizedSlides = computed<ImageSlide[]>(() => {
   return slides.length ? slides : [{ image: fallbackImage, title: 'Belum ada gambar' }]
 })
 const canSlide = computed(() => normalizedSlides.value.length > 1)
+const lightboxSlides = computed(() => props.lightboxSlides.length ? props.lightboxSlides : normalizedSlides.value)
+const lightboxPayload = computed(() => encodePublicLightboxSlides(lightboxSlides.value))
 const autoplay = computed(() => canSlide.value
   ? { delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }
   : false)
@@ -53,7 +59,13 @@ const pagination = computed(() => canSlide.value ? { clickable: true } : false)
       >
         <SwiperSlide v-for="(slide, index) in normalizedSlides" :key="`${slide.image}-${index}`">
           <div class="relative size-full">
-            <img :src="slide.image" :alt="slide.title || alt" class="size-full object-cover">
+            <img
+              :src="slide.image"
+              :alt="slide.title || alt"
+              class="size-full cursor-zoom-in object-cover"
+              :data-lightbox-images="lightboxPayload"
+              :data-lightbox-index="lightboxIndex ?? index"
+            >
             <div v-if="showCaptions && (slide.title || slide.description)" class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-school-navy/85 via-school-navy/35 to-transparent p-5 text-white">
               <p v-if="slide.title" class="text-lg font-extrabold leading-tight">
                 {{ slide.title }}
@@ -67,7 +79,13 @@ const pagination = computed(() => canSlide.value ? { clickable: true } : false)
       </Swiper>
 
       <template #fallback>
-        <img :src="normalizedSlides[0]!.image" :alt="normalizedSlides[0]!.title || alt" class="size-full object-cover">
+        <img
+          :src="normalizedSlides[0]!.image"
+          :alt="normalizedSlides[0]!.title || alt"
+          class="size-full cursor-zoom-in object-cover"
+          :data-lightbox-images="lightboxPayload"
+          :data-lightbox-index="lightboxIndex ?? 0"
+        >
       </template>
     </ClientOnly>
 
