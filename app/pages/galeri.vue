@@ -39,10 +39,10 @@ useSchoolSeo('Galeri', 'Galeri foto SD Negeri Sukorame 2')
             Sorotan Galeri
           </p>
           <h2 class="mt-2 text-3xl font-extrabold text-school-navy">
-            Dokumentasi sekolah dalam tampilan slider otomatis.
+            Momen belajar dan kebersamaan warga sekolah.
           </h2>
           <p class="mt-4 leading-7 text-muted">
-            Slider akan berputar otomatis dan mengulang dari awal agar pengunjung bisa melihat banyak momen tanpa harus menggeser manual.
+            Kumpulan foto kegiatan, prestasi, dan suasana sekolah yang merekam cerita keseharian SD Negeri Sukorame 2.
           </p>
           <div class="mt-5 inline-flex rounded-full bg-school-sky px-4 py-2 text-sm font-bold text-school-action">
             {{ items.length }} foto terbit
