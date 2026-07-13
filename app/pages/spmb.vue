@@ -34,7 +34,7 @@ useSchoolSeo(() => modules.value.ppdb.title, () => modules.value.ppdb.descriptio
       <div class="container-school relative grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
         <div>
           <p class="font-hand text-3xl text-school-yellow">
-            PPDB
+            SPMB
           </p>
           <h1 class="font-display mt-2 text-5xl leading-tight md:text-6xl">
             {{ modules.ppdb.title }}
@@ -62,12 +62,12 @@ useSchoolSeo(() => modules.value.ppdb.title, () => modules.value.ppdb.descriptio
             <div class="relative overflow-hidden rounded-[1.55rem] bg-slate-100">
               <img
                 :src="modules.ppdb.image"
-                alt="PPDB"
+                alt="SPMB"
                 class="aspect-[16/10] w-full object-cover"
               >
               <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-school-navy/85 via-school-navy/35 to-transparent p-5">
                 <p class="inline-flex rounded-full bg-school-yellow px-3 py-1 text-xs font-extrabold uppercase tracking-[.14em] text-school-navy">
-                  Informasi PPDB
+                  Informasi SPMB
                 </p>
                 <h2 class="mt-3 max-w-md text-2xl font-extrabold leading-tight text-white">
                   Siapkan pendaftaran putra-putri terbaik bersama SDN Sukorame 2.
@@ -86,7 +86,7 @@ useSchoolSeo(() => modules.value.ppdb.title, () => modules.value.ppdb.descriptio
     <div class="container-school grid gap-8 py-14 lg:grid-cols-2">
       <section class="card p-7">
         <h2 class="font-display text-3xl text-school-navy">
-          Syarat PPDB
+          Syarat SPMB
         </h2>
         <ol class="mt-6 grid gap-3">
           <li v-for="(item, index) in modules.ppdb.requirements" :key="item.id" class="flex gap-3">
@@ -98,7 +98,7 @@ useSchoolSeo(() => modules.value.ppdb.title, () => modules.value.ppdb.descriptio
 
       <section class="card p-7">
         <h2 class="font-display text-3xl text-school-navy">
-          Alur PPDB
+          Alur SPMB
         </h2>
         <ol class="mt-6 grid gap-4">
           <li v-for="(item, index) in modules.ppdb.steps" :key="item.id">

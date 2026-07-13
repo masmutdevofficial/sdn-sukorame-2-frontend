@@ -27,7 +27,8 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': dynamicPublic, '/profil/**': dynamicPublic, '/akademik/**': dynamicPublic,
-    '/perpustakaan': dynamicPublic, '/kontak': dynamicPublic, '/faq': dynamicPublic, '/ppdb': dynamicPublic,
+    '/perpustakaan': dynamicPublic, '/kontak': dynamicPublic, '/faq': dynamicPublic, '/spmb': dynamicPublic,
+    '/ppdb': { redirect: { to: '/spmb', statusCode: 301 } },
     '/informasi/**': { cache: { maxAge: 600, swr: true } },
     '/kesiswaan/**': { cache: { maxAge: 900, swr: true } },
     '/galeri/**': { cache: { maxAge: 900, swr: true } },

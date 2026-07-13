@@ -29,7 +29,7 @@ const menus = [
   { label: 'Informasi', description: 'Berita dan pengumuman', to: '/admin/informasi', icon: 'mdi:newspaper-variant-outline', tone: 'amber' },
   { label: 'Galeri', description: 'Koleksi foto sekolah', to: '/admin/galeri', icon: 'mdi:image-multiple-outline', tone: 'pink' },
   { label: 'Kontak', description: 'Alamat dan informasi kontak', to: '/admin/kontak', icon: 'mdi:map-marker-outline', tone: 'cyan' },
-  { label: 'PPDB', description: 'Informasi penerimaan siswa', to: '/admin/ppdb', icon: 'mdi:account-school-outline', tone: 'indigo' },
+  { label: 'SPMB', description: 'Informasi penerimaan siswa', to: '/admin/ppdb', icon: 'mdi:account-school-outline', tone: 'indigo' },
 ] as const
 
 const publishedInformation = computed(() => modules.value.informationItems.filter(item => item.status === 'published').length)

@@ -20,7 +20,7 @@ const editReq = (index?: number) => {
 }
 
 const storeReq = async () => {
-  const message = reqIndex.value === -1 ? 'Syarat PPDB berhasil ditambahkan.' : 'Syarat PPDB berhasil diperbarui.'
+  const message = reqIndex.value === -1 ? 'Syarat SPMB berhasil ditambahkan.' : 'Syarat SPMB berhasil diperbarui.'
   if (reqIndex.value === -1) modules.value.ppdb.requirements.push(reqForm.value)
   else modules.value.ppdb.requirements[reqIndex.value!] = reqForm.value
   reqIndex.value = null
@@ -28,9 +28,9 @@ const storeReq = async () => {
 }
 
 const removeReq = async (index: number) => {
-  if (!await confirm({ title: 'Hapus syarat?', message: 'Syarat PPDB ini akan dihapus.', confirmLabel: 'Hapus' })) return
+  if (!await confirm({ title: 'Hapus syarat?', message: 'Syarat SPMB ini akan dihapus.', confirmLabel: 'Hapus' })) return
   modules.value.ppdb.requirements.splice(index, 1)
-  await save('Syarat PPDB berhasil dihapus.')
+  await save('Syarat SPMB berhasil dihapus.')
 }
 
 const editStep = (index?: number) => {
@@ -39,7 +39,7 @@ const editStep = (index?: number) => {
 }
 
 const storeStep = async () => {
-  const message = stepIndex.value === -1 ? 'Alur PPDB berhasil ditambahkan.' : 'Alur PPDB berhasil diperbarui.'
+  const message = stepIndex.value === -1 ? 'Alur SPMB berhasil ditambahkan.' : 'Alur SPMB berhasil diperbarui.'
   if (stepIndex.value === -1) modules.value.ppdb.steps.push(stepForm.value)
   else modules.value.ppdb.steps[stepIndex.value!] = stepForm.value
   stepIndex.value = null
@@ -49,7 +49,7 @@ const storeStep = async () => {
 const removeStep = async (index: number) => {
   if (!await confirm({ title: 'Hapus alur?', message: `Langkah "${modules.value.ppdb.steps[index]!.title}" akan dihapus.`, confirmLabel: 'Hapus' })) return
   modules.value.ppdb.steps.splice(index, 1)
-  await save('Alur PPDB berhasil dihapus.')
+  await save('Alur SPMB berhasil dihapus.')
 }
 
 const editFaq = (index?: number) => {
@@ -58,7 +58,7 @@ const editFaq = (index?: number) => {
 }
 
 const storeFaq = async () => {
-  const message = faqIndex.value === -1 ? 'FAQ PPDB berhasil ditambahkan.' : 'FAQ PPDB berhasil diperbarui.'
+  const message = faqIndex.value === -1 ? 'FAQ SPMB berhasil ditambahkan.' : 'FAQ SPMB berhasil diperbarui.'
   if (faqIndex.value === -1) modules.value.ppdb.faqs.push(faqForm.value)
   else modules.value.ppdb.faqs[faqIndex.value!] = faqForm.value
   faqIndex.value = null
@@ -68,14 +68,14 @@ const storeFaq = async () => {
 const removeFaq = async (index: number) => {
   if (!await confirm({ title: 'Hapus FAQ?', message: `Pertanyaan "${modules.value.ppdb.faqs[index]!.question}" akan dihapus.`, confirmLabel: 'Hapus' })) return
   modules.value.ppdb.faqs.splice(index, 1)
-  await save('FAQ PPDB berhasil dihapus.')
+  await save('FAQ SPMB berhasil dihapus.')
 }
 </script>
 
 <template>
   <div>
     <h1 class="text-3xl font-bold text-school-navy">
-      PPDB
+      SPMB
     </h1>
     <p class="mt-1 text-muted">
       Atur tanggal, hitung mundur, syarat, alur, dan FAQ.
@@ -99,7 +99,7 @@ const removeFaq = async (index: number) => {
           <label class="field">Tanggal selesai<input v-model="modules.ppdb.endDate" type="datetime-local"></label>
           <label class="field md:col-span-2">Deskripsi<textarea v-model="modules.ppdb.description" /></label>
           <div class="md:col-span-2">
-            <AdminImageUpload v-model="modules.ppdb.image" alt="PPDB" />
+            <AdminImageUpload v-model="modules.ppdb.image" alt="SPMB" />
           </div>
         </div>
       </section>
@@ -107,7 +107,7 @@ const removeFaq = async (index: number) => {
       <section class="card p-6">
         <div class="flex justify-between">
           <h2 class="heading">
-            Syarat PPDB
+            Syarat SPMB
           </h2>
           <button type="button" class="btn btn-secondary" @click="editReq()">
             Tambah
@@ -127,7 +127,7 @@ const removeFaq = async (index: number) => {
       <section class="card p-6">
         <div class="flex justify-between">
           <h2 class="heading">
-            Alur PPDB
+            Alur SPMB
           </h2>
           <button type="button" class="btn btn-secondary" @click="editStep()">
             Tambah
@@ -152,7 +152,7 @@ const removeFaq = async (index: number) => {
       <section class="card p-6">
         <div class="flex justify-between">
           <h2 class="heading">
-            FAQ PPDB
+            FAQ SPMB
           </h2>
           <button type="button" class="btn btn-secondary" @click="editFaq()">
             Tambah
@@ -175,7 +175,7 @@ const removeFaq = async (index: number) => {
       </section>
 
       <button type="submit" class="btn btn-primary justify-self-end" :disabled="saving">
-        Simpan PPDB
+        Simpan SPMB
       </button>
     </form>
 

@@ -15,7 +15,7 @@ const menus = [
   { label: 'Informasi', to: '/admin/informasi', icon: 'mdi:newspaper-variant-outline' },
   { label: 'Galeri', to: '/admin/galeri', icon: 'mdi:image-multiple-outline' },
   { label: 'Kontak', to: '/admin/kontak', icon: 'mdi:map-marker-outline' },
-  { label: 'PPDB', to: '/admin/ppdb', icon: 'mdi:account-school-outline' },
+  { label: 'SPMB', to: '/admin/ppdb', icon: 'mdi:account-school-outline' },
   { label: 'Settings Web', to: '/admin/settings-web', icon: 'mdi:web-sync' },
 ]
 

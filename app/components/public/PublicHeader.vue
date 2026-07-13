@@ -57,16 +57,16 @@ onBeforeUnmount(() => {
           </div>
           <NuxtLink v-else :to="item.to!" class="text-sm font-semibold transition-colors hover:text-school-action" active-class="text-school-action">{{ item.label }}</NuxtLink>
         </template>
-        <NuxtLink to="/ppdb" class="btn btn-primary ml-1 px-4 py-2.5 text-sm" active-class="ring-4 ring-school-action/15">
+        <NuxtLink to="/spmb" class="btn btn-primary ml-1 px-4 py-2.5 text-sm" active-class="ring-4 ring-school-action/15">
           <Icon name="mdi:account-school-outline" size="20" />
-          PPDB
+          SPMB
         </NuxtLink>
       </nav>
 
       <div class="flex items-center gap-2 xl:hidden">
-        <NuxtLink to="/ppdb" class="btn btn-primary px-3 py-2.5 text-sm sm:px-4">
+        <NuxtLink to="/spmb" class="btn btn-primary px-3 py-2.5 text-sm sm:px-4">
           <Icon name="mdi:account-school-outline" size="20" />
-          <span class="hidden sm:inline">PPDB</span>
+          <span class="hidden sm:inline">SPMB</span>
         </NuxtLink>
         <button class="grid size-11 place-items-center rounded-xl border border-line text-school-navy transition-colors hover:bg-school-sky" aria-label="Buka menu navigasi" aria-controls="mobile-navigation" :aria-expanded="open" @click="open = true">
         <Icon name="mdi:menu" size="28" />
@@ -89,9 +89,9 @@ onBeforeUnmount(() => {
           </div>
 
           <nav class="flex-1 overflow-y-auto p-4" aria-label="Navigasi mobile">
-            <NuxtLink to="/ppdb" class="mb-3 flex items-center gap-3 rounded-2xl bg-school-action px-4 py-4 font-bold text-white shadow-lg shadow-school-action/20 transition-transform hover:-translate-y-0.5" @click="closeMenu">
+            <NuxtLink to="/spmb" class="mb-3 flex items-center gap-3 rounded-2xl bg-school-action px-4 py-4 font-bold text-white shadow-lg shadow-school-action/20 transition-transform hover:-translate-y-0.5" @click="closeMenu">
               <span class="grid size-10 place-items-center rounded-xl bg-white/15"><Icon name="mdi:account-school-outline" size="24" /></span>
-              <span><b class="block">Informasi PPDB</b><small class="font-medium text-blue-100">Status dan alur pendaftaran</small></span>
+              <span><b class="block">Informasi SPMB</b><small class="font-medium text-blue-100">Status dan alur pendaftaran</small></span>
               <Icon name="mdi:arrow-right" class="ml-auto" size="20" />
             </NuxtLink>
             <template v-for="item in nav" :key="item.label">
