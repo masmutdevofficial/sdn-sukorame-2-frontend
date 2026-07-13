@@ -26,6 +26,9 @@ export interface WebSettings {
   favicon: string
   metaImage: string
   metaImageAlt: string
+  metaImageWidth: number
+  metaImageHeight: number
+  metaImageType: 'image/jpeg' | 'image/png'
   twitterCard: string
   twitterSite: string
   twitterCreator: string
@@ -37,6 +40,8 @@ export interface WebSettings {
     youtube: SocialLink
   }
 }
+
+export const DEFAULT_OG_IMAGE_URL = 'https://cdn.sdnsukorame2kotakediri.sch.id/images/og/sdn-sukorame-2-v1.jpg'
 
 const social = (label: string, icon: string): SocialLink => ({ label, url: '', icon, enabled: false })
 
@@ -52,8 +57,11 @@ export const defaultWebSettings = (): WebSettings => ({
   locale: 'id_ID',
   logo: 'https://cdn.sdnsukorame2kotakediri.sch.id/logo.png',
   favicon: 'https://cdn.sdnsukorame2kotakediri.sch.id/favicon.ico',
-  metaImage: 'https://cdn.sdnsukorame2kotakediri.sch.id/images/no-image.png',
+  metaImage: DEFAULT_OG_IMAGE_URL,
   metaImageAlt: 'Logo SD Negeri Sukorame 2 Kota Kediri',
+  metaImageWidth: 1200,
+  metaImageHeight: 630,
+  metaImageType: 'image/jpeg',
   twitterCard: 'summary_large_image',
   twitterSite: '',
   twitterCreator: '',
@@ -65,3 +73,41 @@ export const defaultWebSettings = (): WebSettings => ({
     youtube: social('YouTube', '/images/youtube.svg'),
   },
 })
+
+const inferOgImageType = (url: string): WebSettings['metaImageType'] | null => {
+  try {
+    const extension = new URL(url).pathname.split('.').pop()?.toLowerCase()
+    if (extension === 'jpg' || extension === 'jpeg') return 'image/jpeg'
+    if (extension === 'png') return 'image/png'
+  } catch { /* Invalid old values are replaced with the safe default below. */ }
+  return null
+}
+
+const positiveInteger = (value: unknown, fallback: number) => Number.isInteger(Number(value)) && Number(value) > 0 ? Number(value) : fallback
+
+/** Keeps pages SSR-safe while a deployment still reads legacy JSON settings from MySQL. */
+export const normalizeWebSettings = (value: Partial<WebSettings> = {}): WebSettings => {
+  const fallback = defaultWebSettings()
+  const sourceImage = String(value.metaImage || '').trim()
+  const sourceImageType = inferOgImageType(sourceImage)
+  const metaImage = !sourceImage || /\/images\/no-image\.png(?:$|[?#])/i.test(sourceImage) || !sourceImageType
+    ? fallback.metaImage
+    : sourceImage
+  const metaImageType = metaImage === fallback.metaImage
+    ? fallback.metaImageType
+    : value.metaImageType === 'image/jpeg' || value.metaImageType === 'image/png'
+      ? value.metaImageType
+      : sourceImageType || fallback.metaImageType
+  return {
+    ...fallback,
+    ...value,
+    canonicalBaseUrl: String(value.canonicalBaseUrl || fallback.canonicalBaseUrl).replace(/\/+$/, ''),
+    metaImage,
+    metaImageAlt: String(value.metaImageAlt || fallback.metaImageAlt).trim() || fallback.metaImageAlt,
+    metaImageWidth: positiveInteger(value.metaImageWidth, fallback.metaImageWidth),
+    metaImageHeight: positiveInteger(value.metaImageHeight, fallback.metaImageHeight),
+    metaImageType,
+    extraMetaTags: Array.isArray(value.extraMetaTags) ? value.extraMetaTags : fallback.extraMetaTags,
+    socialMedia: { ...fallback.socialMedia, ...value.socialMedia },
+  }
+}

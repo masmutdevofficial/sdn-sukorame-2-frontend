@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defaultWebSettings } from '~/types/web-settings'
 import type { ExtraMetaTag, WebSettings } from '~/types/web-settings'
+import type { MediaAsset } from '~/types/media'
 
 definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 useSeoMeta({ title: 'Settings Web', robots: 'noindex, nofollow' })
@@ -37,6 +38,48 @@ const normalizeUrl = (value: string) => {
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
 }
 
+const ogImageLoading = ref(false)
+const inferOgImageType = (url: string): WebSettings['metaImageType'] | '' => {
+  try {
+    const extension = new URL(url).pathname.split('.').pop()?.toLowerCase()
+    if (extension === 'jpg' || extension === 'jpeg') return 'image/jpeg'
+    if (extension === 'png') return 'image/png'
+  } catch { /* The backend will report an invalid URL on submit. */ }
+  return ''
+}
+const ogImageRatio = computed(() => form.value.metaImageHeight > 0 ? form.value.metaImageWidth / form.value.metaImageHeight : 0)
+const ogImageRatioText = computed(() => ogImageRatio.value ? `${ogImageRatio.value.toFixed(2)}:1` : 'Belum diketahui')
+const isOgImageTypeValid = computed(() => ['image/jpeg', 'image/png'].includes(form.value.metaImageType))
+const isOgImageDimensionValid = computed(() => form.value.metaImageWidth > 0 && form.value.metaImageHeight > 0)
+const isOgImageValid = computed(() => isOgImageTypeValid.value && isOgImageDimensionValid.value)
+const isRecommendedOgImage = computed(() => form.value.metaImageWidth === 1200 && form.value.metaImageHeight === 630 && Math.abs(ogImageRatio.value - (1200 / 630)) < 0.01)
+
+const loadOgImageDimensions = (url: string) => {
+  if (!import.meta.client || !url) return
+  const expectedUrl = url
+  ogImageLoading.value = true
+  const image = new Image()
+  image.onload = () => {
+    if (form.value.metaImage === expectedUrl) {
+      form.value.metaImageWidth = image.naturalWidth
+      form.value.metaImageHeight = image.naturalHeight
+      form.value.metaImageType = inferOgImageType(expectedUrl) || form.value.metaImageType
+    }
+    ogImageLoading.value = false
+  }
+  image.onerror = () => { ogImageLoading.value = false }
+  image.src = url
+}
+
+const onOgImageUploaded = (asset: MediaAsset) => {
+  form.value.metaImageType = asset.mimeType === 'image/png' ? 'image/png' : 'image/jpeg'
+  loadOgImageDimensions(asset.url)
+}
+
+watch(() => form.value.metaImage, (url, previousUrl) => {
+  if (url && url !== previousUrl) loadOgImageDimensions(url)
+}, { immediate: true })
+
 const submit = async () => {
   try {
     const payload = cloneSettings(form.value)
@@ -46,6 +89,8 @@ const submit = async () => {
       payload.socialMedia[key].url = normalizeUrl(payload.socialMedia[key].url)
       payload.socialMedia[key].enabled = payload.socialMedia[key].enabled || Boolean(payload.socialMedia[key].url)
     })
+    if (!isOgImageValid.value) throw new Error('Gambar Open Graph harus JPEG atau PNG dengan lebar dan tinggi yang terbaca.')
+    if (!isRecommendedOgImage.value && import.meta.client && !window.confirm('Ukuran gambar Open Graph bukan rekomendasi 1200 × 630. Tetap simpan gambar ini?')) return
     await save(payload)
   } catch (error) {
     toast.error(error instanceof Error ? error.message : 'Periksa kembali isian settings web.', 'Gagal menyimpan')
@@ -113,7 +158,18 @@ const submit = async () => {
             <label class="field mt-3">URL Favicon<input v-model="form.favicon" type="url"></label>
           </div>
           <div class="md:col-span-2">
-            <AdminImageUpload v-model="form.metaImage" label="Gambar Meta / Open Graph" alt="Gambar meta website" />
+            <AdminImageUpload v-model="form.metaImage" label="Gambar Meta / Open Graph" alt="Gambar meta website" :allowed-mime-types="['image/jpeg', 'image/png']" :allowed-extensions="['jpg', 'jpeg', 'png']" @uploaded="onOgImageUploaded" />
+            <div class="mt-4 rounded-xl border border-line bg-slate-50 p-4 text-sm">
+              <p class="font-bold text-school-navy">Rekomendasi: 1200 × 630 px, JPEG atau PNG, rasio 1.91:1.</p>
+              <dl class="mt-3 grid gap-2 sm:grid-cols-2">
+                <div><dt class="text-muted">URL</dt><dd class="break-all font-medium">{{ form.metaImage || 'Belum dipilih' }}</dd></div>
+                <div><dt class="text-muted">MIME type</dt><dd class="font-medium">{{ form.metaImageType || 'Belum diketahui' }}</dd></div>
+                <div><dt class="text-muted">Dimensi</dt><dd class="font-medium">{{ ogImageLoading ? 'Memeriksa…' : `${form.metaImageWidth || 0} × ${form.metaImageHeight || 0} px` }}</dd></div>
+                <div><dt class="text-muted">Rasio</dt><dd class="font-medium">{{ ogImageRatioText }}</dd></div>
+                <div><dt class="text-muted">Status</dt><dd :class="isOgImageValid ? 'font-bold text-emerald-700' : 'font-bold text-red-700'">{{ isOgImageValid ? 'Valid' : 'Tidak valid' }}</dd></div>
+              </dl>
+              <p v-if="isOgImageValid && !isRecommendedOgImage" class="mt-3 font-semibold text-amber-700">Ukuran berbeda dari rekomendasi 1200 × 630. Anda masih dapat menyimpannya setelah konfirmasi.</p>
+            </div>
           </div>
           <label class="field md:col-span-2">Alt Gambar Meta<input v-model="form.metaImageAlt"></label>
         </div>

@@ -1,12 +1,12 @@
 import { webSettingsRepository } from '~/repositories/http/web-settings.repository'
-import { defaultWebSettings } from '~/types/web-settings'
+import { defaultWebSettings, normalizeWebSettings } from '~/types/web-settings'
 import type { WebSettings } from '~/types/web-settings'
 
 export const useWebSettings = (scope: 'admin' | 'public' = 'public') => {
   const toast = useToast()
   const asyncData = useAsyncData(
     `web-settings-${scope}`,
-    () => webSettingsRepository.get(scope),
+    () => webSettingsRepository.get(scope).then(normalizeWebSettings),
     { default: defaultWebSettings },
   )
   const { data: settings, pending: loading, refresh } = asyncData
@@ -16,7 +16,7 @@ export const useWebSettings = (scope: 'admin' | 'public' = 'public') => {
   const save = async (data: WebSettings, message = 'Settings web berhasil disimpan.') => {
     saving.value = true
     try {
-      settings.value = await webSettingsRepository.save(data)
+      settings.value = normalizeWebSettings(await webSettingsRepository.save(data))
       notice.value = message
       toast.success(message)
     } catch (error) {

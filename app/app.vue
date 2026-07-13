@@ -2,6 +2,12 @@
 const { settings, ready } = useWebSettings('public')
 await ready
 
+const protectedSeoMeta = new Set([
+  'description', 'og:title', 'og:description', 'og:type', 'og:url', 'og:site_name', 'og:locale',
+  'og:image', 'og:image:url', 'og:image:secure_url', 'og:image:type', 'og:image:width', 'og:image:height', 'og:image:alt',
+  'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image', 'twitter:image:alt',
+])
+
 useHead(() => ({
   titleTemplate: title => title
     ? (settings.value.titleTemplate || '%s | SDN Sukorame 2').replace('%s', title)
@@ -15,26 +21,13 @@ useHead(() => ({
     { name: 'robots', content: settings.value.robots },
     { name: 'keywords', content: settings.value.keywords.join(', ') },
     { name: 'theme-color', content: settings.value.themeColor },
-    ...settings.value.extraMetaTags.map(tag => ({
+    ...settings.value.extraMetaTags.filter(tag => !protectedSeoMeta.has((tag.property || tag.name).toLowerCase())).map(tag => ({
       key: tag.id,
       ...(tag.name ? { name: tag.name } : { property: tag.property }),
       content: tag.content,
     })),
   ],
 }))
-
-useSeoMeta({
-  description: () => settings.value.description,
-  ogSiteName: () => settings.value.siteTitle,
-  ogDescription: () => settings.value.description,
-  ogImage: () => settings.value.metaImage,
-  ogImageAlt: () => settings.value.metaImageAlt,
-  ogLocale: () => settings.value.locale,
-  twitterCard: () => settings.value.twitterCard as 'summary' | 'summary_large_image' | 'app' | 'player',
-  twitterSite: () => settings.value.twitterSite || undefined,
-  twitterCreator: () => settings.value.twitterCreator || undefined,
-  twitterImage: () => settings.value.metaImage,
-})
 </script>
 
 <template><NuxtLayout><NuxtPage /></NuxtLayout></template>

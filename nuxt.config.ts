@@ -1,6 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 
-const dynamicPublic = { cache: { maxAge: 300, swr: true } }
+const dynamicPublic = { cache: { maxAge: 60, swr: true } }
 const siteUrl = 'https://sdnsukorame2kotakediri.sch.id'
 
 export default defineNuxtConfig({
